@@ -9,16 +9,15 @@ import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
 
 class GameAdapter(
-    private var titles: List<String>,
-    private var platforms: List<String>,
-    private var images: List<Int>
+
+
+    private var games: List<Game>
 ) : RecyclerView.Adapter<GameAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemTitle: TextView = itemView.findViewById(R.id.movieTitle)
-        val itemPlatform: TextView = itemView.findViewById(R.id.gamePlatform)
-        val itemPicture: ImageView = itemView.findViewById(R.id.movieImage)
-
-
+        val itemTitle: TextView = itemView.findViewById(R.id.game_title_textview)
+        val itemRating: TextView = itemView.findViewById(R.id.game_rating_textview)
+        val itemReleaseDate: TextView = itemView.findViewById(R.id.game_release_date_textview)
+        val itemPlatform: TextView = itemView.findViewById(R.id.game_platform_textview)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,12 +28,14 @@ class GameAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemTitle.text = titles[position]
-        holder.itemPlatform.text = platforms[position]
-        holder.itemPicture.setImageResource(images[position])
+        holder.itemTitle.text = games[position].title
+        holder.itemRating.text = games[position].rating.toString()
+        holder.itemReleaseDate.text = games[position].releaseDate
+        holder.itemPlatform.text = games[position].platform
+
     }
 
     override fun getItemCount(): Int {
-        return titles.size
+        return games.size
     }
 }
