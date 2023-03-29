@@ -1,6 +1,7 @@
 package com.example.rma_spirala
 
 import android.view.LayoutInflater
+import android.view.OnReceiveContentListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,15 +10,25 @@ import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
 
 class GameAdapter(
-
-
-    private var games: List<Game>
+    private var games: List<Game>,
+    private var listener: RecyclerViewEvent
 ) : RecyclerView.Adapter<GameAdapter.ViewHolder>() {
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val itemTitle: TextView = itemView.findViewById(R.id.game_title_textview)
         val itemRating: TextView = itemView.findViewById(R.id.game_rating_textview)
         val itemReleaseDate: TextView = itemView.findViewById(R.id.game_release_date_textview)
         val itemPlatform: TextView = itemView.findViewById(R.id.game_platform_textview)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            val position = adapterPosition
+            if(position!=RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -37,5 +48,9 @@ class GameAdapter(
 
     override fun getItemCount(): Int {
         return games.size
+    }
+
+    interface RecyclerViewEvent {
+        fun onItemClick(position: Int)
     }
 }
