@@ -1,8 +1,10 @@
 package com.example.rma_spirala
 
-data class UserRating(
+data class UserReview(
     override val username: String,
     override val timestamp: Long,
-    val rating: Double
-) : UserImpression()
+    val review: String
+) : UserImpression() {
+
+}
 
