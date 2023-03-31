@@ -15,7 +15,9 @@ fun getGames(): List<Game> {
             "The game's story follows Cloud Strife, a mercenary who joins an eco-terrorist organization to stop a world-controlling megacorporation from using the planet's life essence as an energy source.",
             listOf(
                 UserReview("ninja123",21232,"i like it it's good"),
-                UserRating("ninja123", 12342, 9.5)
+                UserRating("ninja123", 12342, 5.5),
+                UserReview("happySmile",21232,"i don't like it it's very bad >:("),
+                UserRating("happySmile", 12342, 0.5),
             )
         ),
         Game(
@@ -62,8 +64,7 @@ fun getGames(): List<Game> {
             "Turn-based Strategy",
             "Following the disappearance of King Roland Ironfist of Enroth, his wife, Queen Catherine, is left to rule the realm. In the meantime, her father, King Gryphonheart of Erathia, is assassinated. Without their beloved King, the kingdom of Erathia falls to the dark forces of Nighon and Eeofol. Queen Catherine returns home to Antagarich seeking to rally the people of her homeland and lead them against the evil that has ravaged their nation.",
             listOf(
-                UserReview("ninja123",21232,"i like it it's good"),
-                UserRating("ninja123", 12342, 9.5)
+
             )
         ),
         Game(
