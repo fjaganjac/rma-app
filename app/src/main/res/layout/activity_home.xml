@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/searchText"
+        android:id="@+id/search_query_edittext"
         android:layout_width="341dp"
         android:layout_height="60dp"
         android:hint="search"
@@ -51,23 +51,23 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <Button
-        android:id="@+id/searchButton"
+        android:id="@+id/search_button"
         android:layout_width="49dp"
         android:layout_height="53dp"
         android:background="@android:drawable/ic_menu_search"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/searchText"
+        app:layout_constraintStart_toEndOf="@+id/search_query_edittext"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/gameRecyclerView"
+        android:id="@+id/game_list"
         android:layout_width="match_parent"
         android:layout_height="600dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchText"
+        app:layout_constraintTop_toBottomOf="@+id/search_query_edittext"
         tools:itemCount="17"
         tools:listitem="@layout/item_game" />
 

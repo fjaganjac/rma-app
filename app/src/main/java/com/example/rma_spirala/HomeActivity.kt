@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class HomeActivity : AppCompatActivity(), GameAdapter.RecyclerViewEvent {
 
-    private var gamesList = getGames()
+    private var gamesList = GameData.getAll()
 
     private lateinit var gamesRecyclerView: RecyclerView
 
@@ -23,7 +23,7 @@ class HomeActivity : AppCompatActivity(), GameAdapter.RecyclerViewEvent {
         setContentView(R.layout.activity_home)
 
 
-        gamesRecyclerView = findViewById(R.id.gameRecyclerView)
+        gamesRecyclerView = findViewById(R.id.game_list)
 
         detailsButton = findViewById(R.id.details_button)
         detailsButton.setOnClickListener { previousGameDetails() }

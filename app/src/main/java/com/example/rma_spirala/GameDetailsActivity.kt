@@ -35,32 +35,31 @@ class GameDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game_details)
 
         homeButton = findViewById(R.id.home_button)
-        homeButton.setOnClickListener { this.finish() }
-
-
-        titleView = findViewById(R.id.game_details_title_textview)
+        titleView = findViewById(R.id.game_title_textview)
         coverView = findViewById(R.id.cover_imageview)
-        platformView = findViewById(R.id.game_details_platform_textview)
-        releaseDateView = findViewById(R.id.game_details_release_date_textview)
-        esrbRatingView = findViewById(R.id.game_details_esrb_rating_textview)
-        developerView = findViewById(R.id.game_details_developer_textview)
-        publisherView = findViewById(R.id.game_details_publisher_textview)
-        genreView = findViewById(R.id.game_details_genre_textview)
-        descriptionView = findViewById(R.id.game_details_description_textview)
-        userImpressionRecyclerView =findViewById(R.id.game_details_user_impression_recyclerview)
+        platformView = findViewById(R.id.platform_textview)
+        releaseDateView = findViewById(R.id.release_date_textview)
+        esrbRatingView = findViewById(R.id.esrb_rating_textview)
+        developerView = findViewById(R.id.developer_textview)
+        publisherView = findViewById(R.id.publisher_textview)
+        genreView = findViewById(R.id.genre_textview)
+        descriptionView = findViewById(R.id.description_textview)
+        userImpressionRecyclerView = findViewById(R.id.game_details_user_impression_recyclerview)
 
         userImpressionRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        homeButton.setOnClickListener { finish(); }
 
 
-        game = getGameByTitle(intent.getStringExtra("game_title").toString())
+
+        game = GameData.getDetails(intent.getStringExtra("game_title").toString())
         val context: Context = coverView.context
-        var id: Int = context.resources.getIdentifier(game.coverImage,"drawable", packageName)
+        var id: Int = context.resources.getIdentifier(game.coverImage, "drawable", packageName)
         coverView.setImageResource(id)
         titleView.text = game.title
         releaseDateView.text = game.releaseDate
         platformView.text = game.platform
-        releaseDateView.text =game.releaseDate
+        releaseDateView.text = game.releaseDate
         esrbRatingView.text = game.esrbRating
         developerView.text = game.developer
         publisherView.text = game.publisher
@@ -68,25 +67,8 @@ class GameDetailsActivity : AppCompatActivity() {
         descriptionView.text = game.description
         userImpressionRecyclerView.adapter = UserImpressionAdapter(game.userImpressions)
 
-
-
-
+        if (game.userImpressions.isEmpty())
+            userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
     }
 
-    private fun getGameByTitle(title: String): Game {
-        val games = getGames()
-        val game = games.find { game -> title == game.title }
-        return game?:Game(
-            "Test",
-            "Test",
-            "Test",
-            0.0,
-            "Test",
-            "Test",
-            "Test",
-            "Test",
-            "Test",
-            "Test",
-            listOf(UserReview("Test",0,"Test")))
-    }
 }
