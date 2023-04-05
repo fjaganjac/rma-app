@@ -33,7 +33,7 @@ class HomeActivity : AppCompatActivity(), GameAdapter.RecyclerViewEvent {
     }
 
     override fun onItemClick(position: Int) {
-
+        detailsButton.isEnabled = true
         val game = gamesList[position]
         previousGame = gamesList[position].title
         val intent = Intent(this, GameDetailsActivity::class.java).apply {
