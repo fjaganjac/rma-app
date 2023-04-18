@@ -1,57 +1,31 @@
 package com.example.rma_spirala
 
-import android.content.Intent
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeActivity : AppCompatActivity(), GameAdapter.RecyclerViewEvent {
-
-    private var gamesList = GameData.getAll()
-
-    private lateinit var gamesRecyclerView: RecyclerView
-
-    private lateinit var detailsButton: Button
-
-    private var previousGame = ""
+class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-
-        gamesRecyclerView = findViewById(R.id.game_list)
-
-        detailsButton = findViewById(R.id.details_button)
-        detailsButton.setOnClickListener { previousGameDetails() }
-
-        gamesRecyclerView.layoutManager = LinearLayoutManager(this)
-        gamesRecyclerView.adapter = GameAdapter(gamesList, this)
-    }
-
-    override fun onItemClick(position: Int) {
-        detailsButton.isEnabled = true
-        val game = gamesList[position]
-        previousGame = gamesList[position].title
-        val intent = Intent(this, GameDetailsActivity::class.java).apply {
-            putExtra("game_title", game.title)
-        }
-        startActivity(intent)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val navView: BottomNavigationView = findViewById(R.id.bottomNavigation)
+        navView.setupWithNavController(navController)
 
     }
 
-    private fun previousGameDetails() {
-        if (previousGame != "") {
-            val intent = Intent(this, GameDetailsActivity::class.java).apply {
-                putExtra("game_title", previousGame)
-            }
-            startActivity(intent)
 
-        }
-    }
+
+
+
+
 
 
 }

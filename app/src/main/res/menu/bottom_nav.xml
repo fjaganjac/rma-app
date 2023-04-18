@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:title="@string/navbar_item_home"
+        android:icon="@android:drawable/btn_star_big_off"/>
+    <item
+        android:id="@+id/gameDetailsFragment"
+        android:title="@string/navbar_item_game_details"
+        android:icon="@android:drawable/ic_menu_search"/>
+</menu>
