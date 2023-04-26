@@ -6,9 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.core.view.forEach
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +40,7 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     private lateinit var gamesRecyclerView: RecyclerView
     private var gamesList = GameData.getAll()
     private var previousGame = ""
+    private lateinit var bottomNavigationView : BottomNavigationView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,34 +48,40 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     ): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_home, container, false)
-
         gamesRecyclerView = view.findViewById(R.id.game_list)
+
+        //bottomNavigationView = view.findViewById(R.id.bottom_nav)
+
         gamesRecyclerView.layoutManager = LinearLayoutManager(activity)
         gamesRecyclerView.adapter = GameAdapter(gamesList, this)
-
         return view;
     }
 
 
     override fun onItemClick(position: Int) {
         val game = gamesList[position]
+
+        HomeActivity.prev = gamesList[position].title
         previousGame = gamesList[position].title
 
 
         val selectedGameBundle = Bundle()
         selectedGameBundle.putString("game_title", game.title)
-
         val destination = GameDetailsFragment()
         destination.arguments = selectedGameBundle
+        val navView: BottomNavigationView? = activity?.findViewById(R.id.bottom_nav)
+        if (navView != null) {
+            navView.selectedItemId= R.id.gameDetailsFragment
+        }
+
+        navView?.menu?.forEach { it.isEnabled = true }
 
         activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.nav_host_fragment,destination)?.commit()
 
 
-        /*val intent = Intent(activity, GameDetailsActivity::class.java).apply {
-            putExtra("game_title", game.title)
-        }
-        startActivity(intent)*/
     }
+
+
 
 
 

@@ -23,13 +23,6 @@ class UserImpressionAdapter(
         var itemReview : TextView = itemView.findViewById(R.id.review_textview)
     }
 
-
-
-
-
-
-
-
     private var rating = 0;
     private var review = 1;
     override fun getItemViewType(position: Int): Int {

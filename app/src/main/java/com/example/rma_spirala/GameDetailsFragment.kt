@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,7 +35,6 @@ class GameDetailsFragment : Fragment() {
     }*/
     private lateinit var game: Game
 
-    private lateinit var homeButton: Button
     private lateinit var titleView: TextView
     private lateinit var releaseDateView: TextView
     private lateinit var platformView: TextView
@@ -53,7 +53,7 @@ class GameDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_game_details, container, false)
 
-        homeButton = view.findViewById(R.id.home_button)
+
         titleView = view.findViewById(R.id.game_title_textview)
         coverView = view.findViewById(R.id.cover_imageview)
         platformView = view.findViewById(R.id.platform_textview)
@@ -64,6 +64,8 @@ class GameDetailsFragment : Fragment() {
         genreView = view.findViewById(R.id.genre_textview)
         descriptionView = view.findViewById(R.id.description_textview)
         userImpressionRecyclerView = view.findViewById(R.id.game_details_user_impression_recyclerview)
+
+        userImpressionRecyclerView.layoutManager = LinearLayoutManager(activity)
 
 
         arguments?.getString("game_title")?.let {
@@ -86,8 +88,6 @@ class GameDetailsFragment : Fragment() {
             if (game.userImpressions.isEmpty())
                 userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
         }
-
-
         return view
     }
 
