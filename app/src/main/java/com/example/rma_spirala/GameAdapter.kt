@@ -14,17 +14,16 @@ class GameAdapter(
     private var listener: RecyclerViewEvent
 ) : RecyclerView.Adapter<GameAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val itemTitle: TextView = itemView.findViewById(R.id.game_title_textview)
+        val itemTitle: TextView = itemView.findViewById(R.id.item_title_textview)
         val itemRating: TextView = itemView.findViewById(R.id.game_rating_textview)
         val itemReleaseDate: TextView = itemView.findViewById(R.id.game_release_date_textview)
         val itemPlatform: TextView = itemView.findViewById(R.id.game_platform_textview)
-
         init {
             itemView.setOnClickListener(this)
         }
 
         override fun onClick(p0: View?) {
-            val position = adapterPosition
+            val position = bindingAdapterPosition
             if(position!=RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)
             }

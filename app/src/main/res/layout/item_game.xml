@@ -26,7 +26,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/game_title_textview"
+                android:id="@+id/item_title_textview"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"

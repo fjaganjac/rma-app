@@ -8,5 +8,9 @@
     <string name="game_details_genre_label">Genre:</string>
     <string name="game_details_description_label">Description:</string>
 
+    <string name="navbar_item_home">Home</string>
+    <string name="navbar_item_game_details">Details</string>
+
+
 
 </resources>
