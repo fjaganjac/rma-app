@@ -54,7 +54,7 @@ class GameDetailsFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_game_details, container, false)
 
 
-        titleView = view.findViewById(R.id.game_title_textview)
+        titleView = view.findViewById(R.id.item_title_textview)
         coverView = view.findViewById(R.id.cover_imageview)
         platformView = view.findViewById(R.id.platform_textview)
         releaseDateView = view.findViewById(R.id.release_date_textview)
