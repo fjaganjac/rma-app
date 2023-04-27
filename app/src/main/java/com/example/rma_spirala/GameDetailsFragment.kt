@@ -23,7 +23,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class GameDetailsFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    /*private var param1: String? = null
+    private var param1: String? = null
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +32,7 @@ class GameDetailsFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-    }*/
+    }
     private lateinit var game: Game
 
     private lateinit var titleView: TextView
@@ -50,10 +50,7 @@ class GameDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_game_details, container, false)
-
-
         titleView = view.findViewById(R.id.item_title_textview)
         coverView = view.findViewById(R.id.cover_imageview)
         platformView = view.findViewById(R.id.platform_textview)
@@ -64,13 +61,10 @@ class GameDetailsFragment : Fragment() {
         genreView = view.findViewById(R.id.genre_textview)
         descriptionView = view.findViewById(R.id.description_textview)
         userImpressionRecyclerView = view.findViewById(R.id.game_details_user_impression_recyclerview)
-
         userImpressionRecyclerView.layoutManager = LinearLayoutManager(activity)
-
 
         arguments?.getString("game_title")?.let {
             game=GameData.getDetails(it)
-
             titleView.text = game.title
             var id: Int = resources.getIdentifier(game.coverImage, "drawable","com.example.rma_spirala")
             coverView.setImageResource(id)
@@ -84,7 +78,6 @@ class GameDetailsFragment : Fragment() {
             genreView.text = game.genre
             descriptionView.text = game.description
             userImpressionRecyclerView.adapter = UserImpressionAdapter(game.userImpressions)
-
             if (game.userImpressions.isEmpty())
                 userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
         }

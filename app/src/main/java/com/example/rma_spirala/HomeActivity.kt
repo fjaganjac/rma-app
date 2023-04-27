@@ -16,7 +16,6 @@ class HomeActivity : AppCompatActivity() {
         var prev = ""
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -35,34 +34,16 @@ class HomeActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.gameDetailsFragment -> {
-                    //navView.selectedItemId= R.id.gameDetailsFragment
-
-
                     val selectedGameBundle = Bundle()
                     selectedGameBundle.putString("game_title", prev)
                     val destination = GameDetailsFragment()
                     destination.arguments = selectedGameBundle
-
                     this.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,destination).commit()
-
-
-
                     return@setOnItemSelectedListener true
                 }
-
             }
             false
         }
-
-        /*if(intent?.action == Intent.ACTION_SEND && intent?.type == "text/plain")
-        {
-            intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                val bundle = bundleOf("game_details" to it)
-                navView.selectedItemId= R.id.gameDetailsFragment
-                navController.navigate(R.id.gameDetailsFragment,bundle)
-            }
-        }*/
-
     }
 
 

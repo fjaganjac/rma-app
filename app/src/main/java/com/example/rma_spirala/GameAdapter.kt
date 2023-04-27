@@ -18,7 +18,6 @@ class GameAdapter(
         val itemRating: TextView = itemView.findViewById(R.id.game_rating_textview)
         val itemReleaseDate: TextView = itemView.findViewById(R.id.game_release_date_textview)
         val itemPlatform: TextView = itemView.findViewById(R.id.game_platform_textview)
-
         init {
             itemView.setOnClickListener(this)
         }

@@ -27,7 +27,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     // TODO: Rename and change types of parameters
-    /*private var param1: String? = null
+    private var param1: String? = null
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,35 +36,26 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-    }*/
+    }
     private lateinit var gamesRecyclerView: RecyclerView
     private var gamesList = GameData.getAll()
     private var previousGame = ""
-    private lateinit var bottomNavigationView : BottomNavigationView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_home, container, false)
         gamesRecyclerView = view.findViewById(R.id.game_list)
-
-        //bottomNavigationView = view.findViewById(R.id.bottom_nav)
-
         gamesRecyclerView.layoutManager = LinearLayoutManager(activity)
         gamesRecyclerView.adapter = GameAdapter(gamesList, this)
         return view;
     }
 
-
     override fun onItemClick(position: Int) {
         val game = gamesList[position]
-
         HomeActivity.prev = gamesList[position].title
         previousGame = gamesList[position].title
-
-
         val selectedGameBundle = Bundle()
         selectedGameBundle.putString("game_title", game.title)
         val destination = GameDetailsFragment()
@@ -73,17 +64,9 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         if (navView != null) {
             navView.selectedItemId= R.id.gameDetailsFragment
         }
-
         navView?.menu?.forEach { it.isEnabled = true }
-
         activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.nav_host_fragment,destination)?.commit()
-
-
     }
-
-
-
-
 
     companion object {
         /**
