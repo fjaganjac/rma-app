@@ -7,7 +7,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.rma_spirala"
+        applicationId "ba.etf.rma23.projekat"
         minSdk 29
         targetSdk 33
         versionCode 1

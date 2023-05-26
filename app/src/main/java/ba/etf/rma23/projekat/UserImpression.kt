@@ -1,4 +1,4 @@
-package com.example.rma_spirala
+package ba.etf.rma23.projekat
 
 abstract class UserImpression {
     abstract val username : String

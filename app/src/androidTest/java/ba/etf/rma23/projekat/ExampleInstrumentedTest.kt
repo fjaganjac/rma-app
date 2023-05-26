@@ -1,4 +1,4 @@
-package com.example.rma_spirala
+package ba.etf.rma23.projekat
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

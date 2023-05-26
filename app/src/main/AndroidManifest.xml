@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RMASpirala">
         <activity
-            android:name=".HomeActivity"
+            android:name="ba.etf.rma23.projekat.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>

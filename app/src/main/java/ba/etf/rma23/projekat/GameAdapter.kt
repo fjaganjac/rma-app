@@ -1,13 +1,11 @@
-package com.example.rma_spirala
+package ba.etf.rma23.projekat
 
 import android.view.LayoutInflater
-import android.view.OnReceiveContentListener
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rma_spirala.R
 
 class GameAdapter(
     private var games: List<Game>,

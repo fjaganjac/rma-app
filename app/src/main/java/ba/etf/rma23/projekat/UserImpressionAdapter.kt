@@ -1,12 +1,12 @@
-package com.example.rma_spirala
+package ba.etf.rma23.projekat
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rma_spirala.R
 
 class UserImpressionAdapter(
     private var userImpressions: List<UserImpression>
@@ -26,7 +26,7 @@ class UserImpressionAdapter(
     private var rating = 0;
     private var review = 1;
     override fun getItemViewType(position: Int): Int {
-        if (userImpressions[position] is UserRating ) {
+        if (userImpressions[position] is UserRating) {
             return rating
         }
         else if(userImpressions[position] is UserReview) {

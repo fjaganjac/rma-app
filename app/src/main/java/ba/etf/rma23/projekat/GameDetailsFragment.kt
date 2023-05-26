@@ -1,15 +1,15 @@
-package com.example.rma_spirala
+package ba.etf.rma23.projekat
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rma_spirala.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,9 +64,9 @@ class GameDetailsFragment : Fragment() {
         userImpressionRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         arguments?.getString("game_title")?.let {
-            game=GameData.getDetails(it)
+            game= GameData.getDetails(it)
             titleView.text = game.title
-            var id: Int = resources.getIdentifier(game.coverImage, "drawable","com.example.rma_spirala")
+            var id: Int = resources.getIdentifier(game.coverImage, "drawable","ba.etf.rma23.projekat")
             coverView.setImageResource(id)
             platformView.text = game.platform
             releaseDateView.text = game.releaseDate

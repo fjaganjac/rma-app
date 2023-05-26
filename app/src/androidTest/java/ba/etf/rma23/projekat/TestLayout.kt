@@ -1,4 +1,4 @@
-/*
+package ba.etf.rma23.projekat/*
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder

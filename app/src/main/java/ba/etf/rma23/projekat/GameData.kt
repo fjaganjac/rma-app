@@ -1,4 +1,4 @@
-package com.example.rma_spirala
+package ba.etf.rma23.projekat
 
 class GameData {
     companion object {
