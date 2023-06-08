@@ -1,0 +1,259 @@
+package ba.etf.rma23.projekat.data.repositories
+
+import ba.etf.rma23.projekat.data.repositories.IGDBApiConfig
+
+
+
+import ba.etf.rma23.projekat.Game
+import ba.etf.rma23.projekat.UserImpression
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONObject
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import kotlin.math.roundToInt
+
+sealed class Result<out R> {
+    data class Success<out T>(val data: T) : Result<T>()
+    data class Error(val exception: Exception) : Result<Nothing>()
+}
+
+object GamesRepository {
+
+    private const val tmdb_api_key: String = "YOUR KEY HERE"
+    var client_id = "xgjrd2i4btzgwaxav98no3o6lhoqfk"
+    var clientSecret = "3w8ptmoas23o6kkiamsiom40yoh7yk"
+
+
+    suspend fun getGamesByName(
+        name: String
+    ): List<Game> {
+        return withContext(Dispatchers.IO) {
+            var fields = "fields name, rating, platforms.name, release_dates.human, cover.url, involved_companies.company.name, genres.name, summary, age_ratings.category, age_ratings.rating;\n" +
+                    "search \"$name\";\n" +
+                    "where rating != null;\n" +
+                    "limit 10;"
+            //println("FIELDS " + fields)
+            val requestBody = RequestBody.create(MediaType.parse("text/plain"), fields)
+            var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(requestBody)
+
+            val lista :MutableList<Game> = ArrayList()
+            var resBody = response.body()
+            if (resBody != null) {
+                for(item in resBody) {
+                    var ratingStr = "Unrated"
+                    if(item.age_ratings?.get(0)?.category == 1) {   //1 -> ESRB
+                        when (item.age_ratings[0].rating) {
+                            6 -> ratingStr = "RP"
+                            7 -> ratingStr = "EC"
+                            8 -> ratingStr = "E"
+                            9 -> ratingStr = "E10"
+                            10 -> ratingStr = "T"
+                            11 -> ratingStr = "M"
+                            12 -> ratingStr = "AO"
+                        }
+                    }
+                    else if(item.age_ratings?.get(0)?.category == 2) {   //2 -> PEGI
+                        when (item.age_ratings[0].rating) {
+                            1 -> ratingStr = "PEGI 3"
+                            2 -> ratingStr = "PEGI 7"
+                            3 -> ratingStr = "PEGI 12"
+                            4 -> ratingStr = "PEGI 16"
+                            5 -> ratingStr = "PEGI 18"
+                        }
+                    }
+                    var title = item.name
+
+                    var datum = ""
+                    if(item.release_dates!=null) {
+                        datum = item.release_dates[0].human
+                    }
+
+                    var platforme = item.platforms
+                    var platforme2=""
+                    if (platforme != null) {
+                        for(platforma in platforme) {
+                            platforme2 += platforma.name+"/"
+                        }
+                    }
+                    platforme2 = platforme2.dropLast(1)
+
+                    var ratingMoj = 0.0
+                    if(item.rating!=null ) {
+                        ratingMoj = item.rating
+                    }
+                    val roundoff = (ratingMoj * 10.0).roundToInt() / 10.0
+
+
+                    var coverUrl = ""    //provjera na null
+                    if(item.cover != null) {
+                        coverUrl = item.cover.url
+                    }
+
+
+                    var dev = "Unknown"         //null check
+                    if(item.companies!=null) {
+                        dev = item.companies[0]?.company?.name
+                    }
+                    var pub = dev
+
+                    var zanr = ""
+                    if(item.genres!=null) {
+                        zanr = item.genres[0].name
+                    }
+
+                    var desc = ""
+                    if(item.summary!=null) {
+                        desc = item.summary
+                    }
+
+                    val impresioni : MutableList<UserImpression> = ArrayList()
+                    var id = item.id
+
+                    var igra = Game(id, title, platforme2, datum, roundoff, coverUrl, ratingStr, dev, pub, zanr, desc, impresioni)
+                    println(igra.toString())
+                    lista.add(igra)
+                }
+            }
+            return@withContext lista
+        }
+    }
+
+    suspend fun getGamesSafe(     ///////////////ISTO KO GORE SAMO PROVJERAVA AGE RATING
+        name: String
+    ): List<Game> {
+        return withContext(Dispatchers.IO) {
+            var fields = "fields name, rating, platforms.name, release_dates.human, cover.url, involved_companies.company.name, genres.name, summary, age_ratings.category, age_ratings.rating;\n" +
+                    "search \"$name\";\n" +
+                    "where rating != null;\n" +
+                    "limit 10;"
+            //println("FIELDS " + fields)
+            val requestBody = RequestBody.create(MediaType.parse("text/plain"), fields)
+            var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(requestBody)
+
+            val lista :MutableList<Game> = ArrayList()
+            var resBody = response.body()
+            if (resBody != null) {
+                for(item in resBody) {
+                    var ratingStr = "Unrated"
+                    var godineInt = 0;
+                    if(item.age_ratings?.get(0)?.category == 1) {   //1 -> ESRB
+                        when (item.age_ratings[0].rating) {
+                            6 -> {
+                                ratingStr = "RP"
+                                godineInt = 99
+                            }
+                            7 -> {
+                                ratingStr = "EC"
+                                godineInt = 3
+                            }
+                            8 -> {
+                                ratingStr = "E"
+                                godineInt = 3
+                            }
+                            9 -> {
+                                ratingStr = "E10"
+                                godineInt = 10
+                            }
+                            10 -> {
+                                ratingStr = "T"
+                                godineInt = 13
+                            }
+                            11 -> {
+                                ratingStr = "M"
+                                godineInt = 17
+                            }
+                            12 -> {
+                                ratingStr = "AO"
+                                godineInt = 18
+                            }
+                        }
+                    }
+                    else if(item.age_ratings?.get(0)?.category == 2) {   //2 -> PEGI
+                        when (item.age_ratings[0].rating) {
+                            1 -> {
+                                ratingStr = "PEGI 3"
+                                godineInt = 3
+                            }
+                            2 -> {
+                                ratingStr = "PEGI 7"
+                                godineInt = 7
+                            }
+                            3 -> {
+                                ratingStr = "PEGI 12"
+                                godineInt = 12
+                            }
+                            4 -> {
+                                ratingStr = "PEGI 16"
+                                godineInt = 16
+                            }
+                            5 -> {
+                                ratingStr = "PEGI 18"
+                                godineInt = 18
+                            }
+                        }
+                    }
+                    var title = item.name
+
+                    var datum = ""
+                    if(item.release_dates!=null) {
+                        datum = item.release_dates[0].human
+                    }
+
+                    var platforme = item.platforms
+                    var platforme2=""
+                    if (platforme != null) {
+                        for(platforma in platforme) {
+                            platforme2 += platforma.name+"/"
+                        }
+                    }
+                    platforme2 = platforme2.dropLast(1)
+
+                    var ratingMoj = 0.0
+                    if(item.rating!=null ) {
+                        ratingMoj = item.rating
+                    }
+                    val roundoff = (ratingMoj * 10.0).roundToInt() / 10.0
+
+
+                    var coverUrl = ""    //provjera na null
+                    if(item.cover != null) {
+                        coverUrl = item.cover.url
+                    }
+
+
+                    var dev = "Unknown"         //null check
+                    if(item.companies!=null) {
+                        dev = item.companies[0]?.company?.name
+                    }
+                    var pub = dev
+
+                    var zanr = ""
+                    if(item.genres!=null) {
+                        zanr = item.genres[0].name
+                    }
+
+                    var desc = ""
+                    if(item.summary!=null) {
+                        desc = item.summary
+                    }
+
+                    val impresioni : MutableList<UserImpression> = ArrayList()
+                    var id = item.id
+
+                    var igra = Game(id, title, platforme2, datum, roundoff, coverUrl, ratingStr, dev, pub, zanr, desc, impresioni)
+
+                    //println("GODINE TRENUTNO "+ AccountGameRepository.age)
+                    if(godineInt < AccountGameRepository.age) {
+                        lista.add(igra)
+                    }
+
+                }
+            }
+            return@withContext lista
+        }
+    }
+}

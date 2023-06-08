@@ -2,7 +2,7 @@
     <string name="app_name">RMA-Spirala</string>
     <string name="game_details_platform_label">Platform:</string>
     <string name="game_details_release_date_label">Release Date:</string>
-    <string name="game_details_esrb_rating_label">ESRB Rating:</string>
+    <string name="game_details_esrb_rating_label">Age Rating:</string>
     <string name="game_details_developer_label">Developer:</string>
     <string name="game_details_publisher_label">Publisher:</string>
     <string name="game_details_genre_label">Genre:</string>
@@ -10,6 +10,9 @@
 
     <string name="navbar_item_home">Home</string>
     <string name="navbar_item_game_details">Details</string>
+    <string name="details_button_save_button">Save to Favorites</string>
+    <string name="details_button_remove_button">Remove from Favorites</string>
+
 
 
 

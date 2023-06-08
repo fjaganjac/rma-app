@@ -5,11 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma23.projekat.data.repositories.AccountGameRepository
 import com.example.rma_spirala.R
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,6 +53,9 @@ class GameDetailsFragment : Fragment() {
     private lateinit var genreView: TextView
     private lateinit var descriptionView: TextView
     private lateinit var userImpressionRecyclerView: RecyclerView
+    private lateinit var saveButtonView : Button
+    private lateinit var removeButtonView : Button
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,11 +74,19 @@ class GameDetailsFragment : Fragment() {
         userImpressionRecyclerView = view.findViewById(R.id.game_details_user_impression_recyclerview)
         userImpressionRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        arguments?.getString("game_title")?.let {
-            game= GameData.getDetails(it)
+
+        saveButtonView = view.findViewById(R.id.save_button)
+        saveButtonView.setOnClickListener { saveGame() }
+
+        removeButtonView = view.findViewById(R.id.remove_button)
+        removeButtonView.setOnClickListener { removeGame() }
+
+        arguments?.getSerializable("game")?.let {
+            game= it as Game
             titleView.text = game.title
-            var id: Int = resources.getIdentifier(game.coverImage, "drawable","ba.etf.rma23.projekat")
-            coverView.setImageResource(id)
+            /*var id: Int = resources.getIdentifier(game.coverImage, "drawable","ba.etf.rma23.projekat")
+            coverView.setImageResource(id)*/
+            Picasso.get().load(game.coverImage).into(coverView)
             platformView.text = game.platform
             releaseDateView.text = game.releaseDate
             platformView.text = game.platform
@@ -82,6 +101,26 @@ class GameDetailsFragment : Fragment() {
                 userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
         }
         return view
+    }
+
+    fun saveGame() {
+        val toast = Toast.makeText(context, "Game Added", Toast.LENGTH_SHORT)
+        toast.show()
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            AccountGameRepository.saveGame(game)
+        }
+    }
+
+    fun removeGame() {
+        val toast = Toast.makeText(context, "Game Removed", Toast.LENGTH_SHORT)
+        toast.show()
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            //println("ID: "+game.igdb_id)
+            AccountGameRepository.removeGame(game.igdb_id)
+        }
+        //println("IZASAO SAM")
     }
 
     companion object {

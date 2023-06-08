@@ -20,18 +20,52 @@
             android:orientation="vertical">
 
 
-            <TextView
-                android:id="@+id/item_title_textview"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="GAME TITLE"
-                android:textSize="30sp" />
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/cover_imageview"
-                android:layout_width="match_parent"
-                android:layout_height="219dp" />
+                <TextView
+                    android:id="@+id/item_title_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="GAME TITLE"
+                    android:textSize="30sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/save_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:textSize="12dp"
+                    android:text="@string/details_button_save_button"
+                    app:layout_constraintBottom_toTopOf="@+id/cover_imageview"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/remove_button"
+                    app:layout_constraintTop_toBottomOf="@+id/item_title_textview"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <ImageView
+                    android:id="@+id/cover_imageview"
+                    android:layout_width="match_parent"
+                    android:layout_height="219dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <Button
+                    android:id="@+id/remove_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:text="@string/details_button_remove_button"
+                    app:layout_constraintBottom_toBottomOf="@+id/save_button"
+                    app:layout_constraintEnd_toStartOf="@+id/save_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/item_title_textview" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TableLayout
                 android:id="@+id/tableLayout"

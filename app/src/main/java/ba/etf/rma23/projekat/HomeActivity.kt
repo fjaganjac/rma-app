@@ -1,12 +1,18 @@
 package ba.etf.rma23.projekat
 
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import ba.etf.rma23.projekat.data.repositories.AccountApiConfig
+import ba.etf.rma23.projekat.data.repositories.AccountGameRepository
+import ba.etf.rma23.projekat.data.repositories.GamesRepository
+import ba.etf.rma23.projekat.data.repositories.IGDBApiConfig
 import com.example.rma_spirala.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.*
 
 class HomeActivity : AppCompatActivity() {
     companion object {
@@ -21,6 +27,17 @@ class HomeActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         val navView: BottomNavigationView = findViewById(R.id.bottom_nav)
         navView.setupWithNavController(navController)
+
+        //println("aSDASDASD")
+
+        /*val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            AccountGameRepository.setAge(3)
+            println("GOD "+AccountGameRepository.age)
+            var lista = GamesRepository.getGamesSafe("Valorant")
+            println("GOD "+lista)
+
+        }*/
 
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
