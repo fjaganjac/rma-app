@@ -103,7 +103,7 @@ class GameDetailsFragment : Fragment() {
         return view
     }
 
-    fun saveGame() {
+    private fun saveGame() {
         val toast = Toast.makeText(context, "Game Added", Toast.LENGTH_SHORT)
         toast.show()
         val scope = CoroutineScope(Job() + Dispatchers.IO)
@@ -112,15 +112,14 @@ class GameDetailsFragment : Fragment() {
         }
     }
 
-    fun removeGame() {
+    private fun removeGame() {
         val toast = Toast.makeText(context, "Game Removed", Toast.LENGTH_SHORT)
         toast.show()
         val scope = CoroutineScope(Job() + Dispatchers.IO)
         scope.launch {
-            //println("ID: "+game.igdb_id)
             AccountGamesRepository.removeGame(game.id)
         }
-        //println("IZASAO SAM")
+
     }
 
     companion object {

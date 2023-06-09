@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,7 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     private lateinit var searchButton: Button
     private lateinit var searchBar: EditText
     private lateinit var sortButton: Button
+    private lateinit var safeSearchSwitch: Switch
 
 
     private lateinit var gamesRecyclerView: RecyclerView
@@ -61,6 +63,7 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         searchButton = view.findViewById(R.id.search_button)
         searchBar = view.findViewById(R.id.search_query_edittext)
         sortButton = view.findViewById(R.id.sort_button)
+        safeSearchSwitch = view.findViewById(R.id.safe_search_switch)
 
 
         searchButton.setOnClickListener {
@@ -127,7 +130,12 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     }
 
     private fun onClick() {
-        search(searchBar.text.toString())
+        if(safeSearchSwitch.isChecked) {
+            safeSearch(searchBar.text.toString())
+        }
+        else {
+            search(searchBar.text.toString())
+        }
     }
 
 
@@ -141,6 +149,24 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
             //print("REZULTAT ")
             val scope1 = CoroutineScope(Job() + Dispatchers.Main)
             result = GamesRepository.getGamesByName(name)
+            gamesList = GamesRepository.GamesList
+            scope1.launch {
+                //result = GamesRepository.getGamesByName(name)
+                //gamesList = result as List<Game>
+                gamesAdapter.updateGames(gamesList)
+            }
+        }
+    }
+
+    fun safeSearch(name:String) {
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        //var listaIgara: List<Game> = ArrayList<Game>()
+        var result: List<Game>? = null
+        scope.launch {
+            // Vrti se poziv servisa i suspendira se rutina dok se `withContext` ne zavrsi
+            //print("REZULTAT ")
+            val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+            result = GamesRepository.getGamesSafe(name)
             gamesList = GamesRepository.GamesList
             scope1.launch {
                 //result = GamesRepository.getGamesByName(name)

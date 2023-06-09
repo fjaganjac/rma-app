@@ -50,6 +50,11 @@ class HomeActivity : AppCompatActivity() {
                     this.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,destination).commit()
                     return@setOnItemSelectedListener true
                 }
+                R.id.accountFragment -> {
+                    val accountFragment = AccountFragment()
+                    this.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,accountFragment).commit()
+                    return@setOnItemSelectedListener true
+                }
             }
             false
         }

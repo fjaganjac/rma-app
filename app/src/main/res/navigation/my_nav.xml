@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_homeFragment_to_gameDetailsFragment"
             app:destination="@id/gameDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameDetailsFragment"
@@ -19,6 +22,20 @@
         android:label="GameDetailsFragment" >
         <action
             android:id="@+id/action_gameDetailsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_gameDetailsFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="ba.etf.rma23.projekat.AccountFragment"
+        android:label="AccountFragment" >
+        <action
+            android:id="@+id/action_accountFragment_to_gameDetailsFragment"
+            app:destination="@id/gameDetailsFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

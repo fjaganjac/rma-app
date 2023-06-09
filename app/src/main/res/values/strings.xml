@@ -10,10 +10,13 @@
 
     <string name="navbar_item_home">Home</string>
     <string name="navbar_item_game_details">Details</string>
+    <string name="navbar_item_account">Account</string>
+
     <string name="details_button_save_button">Save to Favorites</string>
     <string name="details_button_remove_button">Remove from Favorites</string>
-
-
+    <string name="safe_search_switch">Safe Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

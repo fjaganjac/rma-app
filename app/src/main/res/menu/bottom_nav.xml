@@ -10,4 +10,9 @@
         android:title="@string/navbar_item_game_details"
         android:icon="@drawable/ic_baseline_star_24"
         android:enabled="false"/>
+    <item
+        android:id="@+id/accountFragment"
+        android:title="@string/navbar_item_account"
+        android:icon = "@drawable/ic_baseline_person_24"
+        android:enabled = "true" />
 </menu>
