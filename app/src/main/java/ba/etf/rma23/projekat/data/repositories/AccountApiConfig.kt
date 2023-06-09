@@ -50,10 +50,8 @@ class AccountApiConfig {
     }
 
     object ApiAdapter {
-        private val Hash: String = AccountGamesRepository.getHash()
-
         val retrofit: Api = Retrofit.Builder()
-            .baseUrl("https://rma23ws.onrender.com/account/d8da4bfc-fc15-4463-ae5a-6dc2c731366a/")
+            .baseUrl("https://rma23ws.onrender.com/account/${AccountGamesRepository.getHash()}/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(Api::class.java)

@@ -40,13 +40,14 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     }
     private lateinit var searchButton: Button
     private lateinit var searchBar: EditText
+    private lateinit var sortButton: Button
 
 
     private lateinit var gamesRecyclerView: RecyclerView
     private var gamesList = listOf<Game>()
     private var gamesAdapter = GameAdapter(gamesList,this)
-    private var previousGame = ""
-    //public var searchResult :List<Game>
+    private var previousGame = Game(-1,"","","",0.0,"","","","","","",listOf<UserImpression>())
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,9 +60,15 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         gamesRecyclerView = view.findViewById(R.id.game_list)
         searchButton = view.findViewById(R.id.search_button)
         searchBar = view.findViewById(R.id.search_query_edittext)
+        sortButton = view.findViewById(R.id.sort_button)
+
 
         searchButton.setOnClickListener {
             onClick()
+        }
+
+        sortButton.setOnClickListener {
+            sortView()
         }
 
         /*val scope = CoroutineScope(Job() + Dispatchers.Main)
@@ -100,8 +107,8 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     override fun onItemClick(position: Int) {
         //println("ASDASDASDSADASDASDASDASDASDADADD")
         val game = gamesList[position]
-        HomeActivity.prev = gamesList[position].title
-        previousGame = gamesList[position].title
+        HomeActivity.prev = game
+        previousGame = game
 
 
         val selectedGameBundle = Bundle()
@@ -126,17 +133,32 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
 
     fun search(name: String) {
 
-        val scope = CoroutineScope(Job() + Dispatchers.IO /*+ coroutineExceptionHandler*/)
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
         //var listaIgara: List<Game> = ArrayList<Game>()
         var result: List<Game>? = null
         scope.launch {
             // Vrti se poziv servisa i suspendira se rutina dok se `withContext` ne zavrsi
             //print("REZULTAT ")
             val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+            result = GamesRepository.getGamesByName(name)
+            gamesList = GamesRepository.GamesList
             scope1.launch {
-                result = GamesRepository.getGamesByName(name)
-                gamesList = result as List<Game>
-                gamesAdapter.updateGames(result)
+                //result = GamesRepository.getGamesByName(name)
+                //gamesList = result as List<Game>
+                gamesAdapter.updateGames(gamesList)
+            }
+        }
+    }
+
+
+    fun sortView() {
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            GamesRepository.sortGames()
+            gamesList = GamesRepository.GamesList
+            val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+            scope1.launch {
+                gamesAdapter.updateGames(gamesList)
             }
         }
     }

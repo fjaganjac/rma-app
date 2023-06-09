@@ -11,7 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
     companion object {
-        var prev = ""
+        var prev = Game(-1,"","","",0.0,"","","","","","",listOf<UserImpression>())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.gameDetailsFragment -> {
                     val selectedGameBundle = Bundle()
-                    selectedGameBundle.putString("game_title", prev)
+                    selectedGameBundle.putSerializable("game", prev)
                     val destination = GameDetailsFragment()
                     destination.arguments = selectedGameBundle
                     this.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,destination).commit()

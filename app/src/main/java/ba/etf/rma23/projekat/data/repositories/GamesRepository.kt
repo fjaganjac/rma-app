@@ -112,8 +112,9 @@ object GamesRepository {
                     println(igra.toString())
                     lista.add(igra)
                 }
+                GamesList = lista
             }
-            GamesList = lista
+
             return@withContext lista
         }
     }
@@ -262,7 +263,9 @@ object GamesRepository {
             //sortiraj pomocnu listu po imenu
             //sortiraj tekucu listu po imenu
             //spoji dvije liste
+            var kopija = GamesList
             var savedIds = AccountGamesRepository.getSavedGames().map { it.id }
+            GamesList = kopija
             val pomocna :MutableList<Game> = ArrayList()
             for(item in GamesList) {
                 if(savedIds.contains(item.id)) {
@@ -271,13 +274,13 @@ object GamesRepository {
             }
             pomocna.sortBy { it.title }
 
-            GamesList.sortedBy { it.title }
-            for(item in GamesList) {
-                if(!savedIds.contains(item.id)) {
-                    pomocna.add(item)
-                }
-            }
+            GamesList = GamesList.sortedBy { it.title }
 
+            for(item in GamesList) {
+                if(!savedIds.contains(item.id))
+                pomocna.add(item)
+            }
+            println("POMOCNA "+pomocna)
             GamesList=pomocna
             return@withContext GamesList
         }
