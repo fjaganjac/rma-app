@@ -8,7 +8,7 @@ import okhttp3.RequestBody
 import retrofit2.Response
 
 
-object AccountGameRepository {
+object AccountGamesRepository {
     var hash : String = "d8da4bfc-fc15-4463-ae5a-6dc2c731366a"
     var age = 1
 
@@ -28,7 +28,12 @@ object AccountGameRepository {
         return withContext(Dispatchers.IO) {
 
             var response = AccountApiConfig.ApiAdapter.retrofit.getSavedGames()
-            return@withContext response
+            val lista :MutableList<Game> = ArrayList()
+            for(item in response) {
+                lista.add(GamesRepository.getGamesByName(item.title)[0])
+            }
+            println("Res RES RES $lista")
+            return@withContext lista
         }
     }
 
@@ -38,7 +43,7 @@ object AccountGameRepository {
 
             var fields = "{\n" +
                     "  \"game\": {\n" +
-                    "    \"igdb_id\": ${game.igdb_id},\n" +
+                    "    \"igdb_id\": ${game.id},\n" +
                     "    \"name\": \"${game.title}\"\n" +
                     "  }\n" +
                     "}"
@@ -59,9 +64,27 @@ object AccountGameRepository {
 
     suspend fun removeNonSafe(): Boolean {
         return withContext(Dispatchers.IO) {
-
-
-
+            var response = AccountApiConfig.ApiAdapter.retrofit.getSavedGames()
+            for(item in response) {
+                var ageRating = 0
+                when(item.esrbRating) {
+                    "RP"-> ageRating = 99
+                    "EC" ->ageRating = 3
+                    "E" -> ageRating = 3
+                    "E10" -> ageRating = 10
+                    "T" -> ageRating = 13
+                    "M" -> ageRating = 17
+                    "A0" -> ageRating = 18
+                    "PEGI 3" -> ageRating = 3
+                    "PEGI 7" -> ageRating = 7
+                    "PEGI 12" -> ageRating = 12
+                    "PEGI 16" -> ageRating = 16
+                    "PEGI 18" -> ageRating = 18
+                }
+                if(age < ageRating) {
+                    AccountApiConfig.ApiAdapter.retrofit.RemoveGame(item.id)
+                }
+            }
             return@withContext true
         }
     }

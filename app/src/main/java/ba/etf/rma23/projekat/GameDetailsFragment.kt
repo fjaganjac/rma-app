@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ba.etf.rma23.projekat.data.repositories.AccountGameRepository
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import com.example.rma_spirala.R
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
@@ -108,7 +108,7 @@ class GameDetailsFragment : Fragment() {
         toast.show()
         val scope = CoroutineScope(Job() + Dispatchers.IO)
         scope.launch {
-            AccountGameRepository.saveGame(game)
+            AccountGamesRepository.saveGame(game)
         }
     }
 
@@ -118,7 +118,7 @@ class GameDetailsFragment : Fragment() {
         val scope = CoroutineScope(Job() + Dispatchers.IO)
         scope.launch {
             //println("ID: "+game.igdb_id)
-            AccountGameRepository.removeGame(game.igdb_id)
+            AccountGamesRepository.removeGame(game.id)
         }
         //println("IZASAO SAM")
     }

@@ -2,9 +2,7 @@ package ba.etf.rma23.projekat.data.repositories
 
 import ba.etf.rma23.projekat.Game
 import com.google.gson.annotations.SerializedName
-import okhttp3.Request
 import okhttp3.RequestBody
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -18,7 +16,7 @@ data class DeleteResponse(
 
 class AccountApiConfig {
 
-    private val Hash :String = "asdasdsadas";
+    private val Hash :String = "d8da4bfc-fc15-4463-ae5a-6dc2c731366a";
     var age = 0;
     interface Api {
 
@@ -52,7 +50,7 @@ class AccountApiConfig {
     }
 
     object ApiAdapter {
-        private val Hash: String = AccountGameRepository.getHash()
+        private val Hash: String = AccountGamesRepository.getHash()
 
         val retrofit: Api = Retrofit.Builder()
             .baseUrl("https://rma23ws.onrender.com/account/d8da4bfc-fc15-4463-ae5a-6dc2c731366a/")

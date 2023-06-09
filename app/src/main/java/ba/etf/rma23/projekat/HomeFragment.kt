@@ -10,12 +10,11 @@ import android.widget.EditText
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ba.etf.rma23.projekat.data.repositories.AccountGameRepository
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import com.example.rma_spirala.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.selects.select
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,13 +77,12 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         var listaIgara: MutableList<Game> = ArrayList<Game>()
         var result: List<Game>? = null
         scope.launch {
-            result = AccountGameRepository.getSavedGames()
+            result = AccountGamesRepository.getSavedGames()
+            //println("Date "+ result!!.get(0).releaseDate)
             val scope1 = CoroutineScope(Job() + Dispatchers.Main)
             scope1.launch {
                 for(item in result!!) {
                     listaIgara.add(GamesRepository.getGamesByName(item.title)[0])
-
-
                 }
                 gamesList = listaIgara
                 gamesAdapter.updateGames(listaIgara)

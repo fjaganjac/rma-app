@@ -1,8 +1,5 @@
 package ba.etf.rma23.projekat.data.repositories
 
-import ba.etf.rma23.projekat.data.repositories.IGDBApiConfig
-
-
 
 import ba.etf.rma23.projekat.Game
 import ba.etf.rma23.projekat.UserImpression
@@ -10,10 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import org.json.JSONObject
-import java.math.BigDecimal
-import java.math.RoundingMode
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 sealed class Result<out R> {
@@ -26,6 +19,8 @@ object GamesRepository {
     private const val tmdb_api_key: String = "YOUR KEY HERE"
     var client_id = "xgjrd2i4btzgwaxav98no3o6lhoqfk"
     var clientSecret = "3w8ptmoas23o6kkiamsiom40yoh7yk"
+
+    var GamesList = listOf<Game>()
 
 
     suspend fun getGamesByName(
@@ -118,11 +113,12 @@ object GamesRepository {
                     lista.add(igra)
                 }
             }
+            GamesList = lista
             return@withContext lista
         }
     }
 
-    suspend fun getGamesSafe(     ///////////////ISTO KO GORE SAMO PROVJERAVA AGE RATING
+    suspend fun getGamesSafe(
         name: String
     ): List<Game> {
         return withContext(Dispatchers.IO) {
@@ -247,13 +243,44 @@ object GamesRepository {
                     var igra = Game(id, title, platforme2, datum, roundoff, coverUrl, ratingStr, dev, pub, zanr, desc, impresioni)
 
                     //println("GODINE TRENUTNO "+ AccountGameRepository.age)
-                    if(godineInt < AccountGameRepository.age) {
+                    if(godineInt < AccountGamesRepository.age) {
                         lista.add(igra)
                     }
 
                 }
             }
+            GamesList = lista
             return@withContext lista
         }
+    }
+
+    suspend fun sortGames():List<Game> {
+        return withContext(Dispatchers.IO) {
+            //GamesList.sortedBy{it.title}
+            //napravi pomocnu listu
+            //u nju stavi sve koje su omiljene
+            //sortiraj pomocnu listu po imenu
+            //sortiraj tekucu listu po imenu
+            //spoji dvije liste
+            var savedIds = AccountGamesRepository.getSavedGames().map { it.id }
+            val pomocna :MutableList<Game> = ArrayList()
+            for(item in GamesList) {
+                if(savedIds.contains(item.id)) {
+                    pomocna.add(item)
+                }
+            }
+            pomocna.sortBy { it.title }
+
+            GamesList.sortedBy { it.title }
+            for(item in GamesList) {
+                if(!savedIds.contains(item.id)) {
+                    pomocna.add(item)
+                }
+            }
+
+            GamesList=pomocna
+            return@withContext GamesList
+        }
+
     }
 }

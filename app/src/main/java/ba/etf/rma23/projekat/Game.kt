@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class Game (
-    @SerializedName("igdb_id") val igdb_id: Int,
+    @SerializedName("id") val id: Int,
     @SerializedName("name") val title: String,
     @SerializedName("platform") val platform: String,
     @SerializedName("releaseDate") val releaseDate: String,
