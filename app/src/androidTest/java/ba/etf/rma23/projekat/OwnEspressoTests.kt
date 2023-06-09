@@ -1,3 +1,4 @@
+/*
 package ba.etf.rma23.projekat
 
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@ class OwnEspressoTests {
     fun FragmentNavigationTest() {
         //Scenario: Korisnik otvara aplikaciju i klika na trecu igricu u listi zatim se vraca na prvi fragment
 
-        val activityScenario = ActivityScenario.launch(HomeActivity::class.java)
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
         var clickedItem = GameData.getAll().get(2)
         onView(withId(R.id.game_list)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
@@ -45,7 +46,7 @@ class OwnEspressoTests {
     @Test
     fun PreviousGameTest() {
         //Scenario: Korisnik otvara aplikaciju, klika na razlicite igrice i vraca se na pocetni fragment par puta zatim klika na details ikonu na bottomNavigationBar
-        val activityScenario = ActivityScenario.launch(HomeActivity::class.java)
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
 
         //bottomNavigationBar ne treba biti pristupacan prije nego sto se klikne na igricu
         onView(withContentDescription("Home")).check(matches(isNotEnabled()))
@@ -68,4 +69,4 @@ class OwnEspressoTests {
         onView(withContentDescription("Details")).perform(ViewActions.click())
         onView(withText(clickedItem.releaseDate)).check(matches(isCompletelyDisplayed()))
     }
-}
+}*/

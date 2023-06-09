@@ -1,3 +1,4 @@
+/*
 package ba.etf.rma23.projekat
 
 class GameData {
@@ -172,4 +173,4 @@ class GameData {
             )
         }
     }
-}
+}*/

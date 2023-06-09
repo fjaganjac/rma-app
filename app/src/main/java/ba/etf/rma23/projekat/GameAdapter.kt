@@ -50,4 +50,11 @@ class GameAdapter(
     interface RecyclerViewEvent {
         fun onItemClick(position: Int)
     }
+
+    fun updateGames(games: List<Game>?) {
+        if (games != null) {
+            this.games = games
+        }
+        notifyDataSetChanged()
+    }
 }

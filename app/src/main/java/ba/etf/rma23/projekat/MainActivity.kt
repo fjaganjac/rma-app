@@ -1,6 +1,7 @@
 package ba.etf.rma23.projekat
 
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
@@ -8,9 +9,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.rma_spirala.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     companion object {
-        var prev = ""
+        var prev = Game(-1,"","","",0.0,"","","","","","",listOf<UserImpression>())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +23,17 @@ class HomeActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.bottom_nav)
         navView.setupWithNavController(navController)
 
+        //println("aSDASDASD")
+
+        /*val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            AccountGameRepository.setAge(3)
+            println("GOD "+AccountGameRepository.age)
+            var lista = GamesRepository.getGamesSafe("Valorant")
+            println("GOD "+lista)
+
+        }*/
+
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
@@ -32,10 +44,15 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.gameDetailsFragment -> {
                     val selectedGameBundle = Bundle()
-                    selectedGameBundle.putString("game_title", prev)
+                    selectedGameBundle.putSerializable("game", prev)
                     val destination = GameDetailsFragment()
                     destination.arguments = selectedGameBundle
                     this.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,destination).commit()
+                    return@setOnItemSelectedListener true
+                }
+                R.id.accountFragment -> {
+                    val accountFragment = AccountFragment()
+                    this.supportFragmentManager.beginTransaction().replace(R.id.nav_host_fragment,accountFragment).commit()
                     return@setOnItemSelectedListener true
                 }
             }

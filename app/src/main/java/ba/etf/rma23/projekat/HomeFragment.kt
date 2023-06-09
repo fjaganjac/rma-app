@@ -5,11 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Switch
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import com.example.rma_spirala.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import ba.etf.rma23.projekat.data.repositories.GamesRepository
+import kotlinx.coroutines.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,27 +39,86 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
             param2 = it.getString(ARG_PARAM2)
         }
     }
+    private lateinit var searchButton: Button
+    private lateinit var searchBar: EditText
+    private lateinit var sortButton: Button
+    private lateinit var safeSearchSwitch: Switch
+
+
     private lateinit var gamesRecyclerView: RecyclerView
-    private var gamesList = GameData.getAll()
-    private var previousGame = ""
+    private var gamesList = listOf<Game>()
+    private var gamesAdapter = GameAdapter(gamesList,this)
+    private var previousGame = Game(-1,"","","",0.0,"","","","","","",listOf<UserImpression>())
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+
         var view = inflater.inflate(R.layout.fragment_home, container, false)
         gamesRecyclerView = view.findViewById(R.id.game_list)
+        searchButton = view.findViewById(R.id.search_button)
+        searchBar = view.findViewById(R.id.search_query_edittext)
+        sortButton = view.findViewById(R.id.sort_button)
+        safeSearchSwitch = view.findViewById(R.id.safe_search_switch)
+
+
+        searchButton.setOnClickListener {
+            onClick()
+        }
+
+        sortButton.setOnClickListener {
+            sortView()
+        }
+
+        /*val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch {
+            var result = AccountGameRepository.getSavedGames()
+            for(item in result)
+            {
+
+            }
+        }*/
+
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        var listaIgara: MutableList<Game> = ArrayList<Game>()
+        var result: List<Game>? = null
+        scope.launch {
+            result = AccountGamesRepository.getSavedGames()
+            //println("Date "+ result!!.get(0).releaseDate)
+            val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+            scope1.launch {
+                for(item in result!!) {
+                    listaIgara.add(GamesRepository.getGamesByName(item.title)[0])
+                }
+                gamesList = listaIgara
+                gamesAdapter.updateGames(listaIgara)
+            }
+        }
+
         gamesRecyclerView.layoutManager = LinearLayoutManager(activity)
-        gamesRecyclerView.adapter = GameAdapter(gamesList, this)
+
+        gamesRecyclerView.adapter = gamesAdapter
+
+
         return view;
     }
 
     override fun onItemClick(position: Int) {
+        //println("ASDASDASDSADASDASDASDASDASDADADD")
         val game = gamesList[position]
-        HomeActivity.prev = gamesList[position].title
-        previousGame = gamesList[position].title
+        MainActivity.prev = game
+        previousGame = game
+
+
         val selectedGameBundle = Bundle()
-        selectedGameBundle.putString("game_title", game.title)
+        var obj = game
+        //selectedGameBundle.putString("game_title", game.title)
+        selectedGameBundle.putSerializable("game",obj)
+
         val destination = GameDetailsFragment()
         destination.arguments = selectedGameBundle
         val navView: BottomNavigationView? = activity?.findViewById(R.id.bottom_nav)
@@ -63,6 +128,67 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         navView?.menu?.forEach { it.isEnabled = true }
         activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.nav_host_fragment,destination)?.commit()
     }
+
+    private fun onClick() {
+        if(safeSearchSwitch.isChecked) {
+            safeSearch(searchBar.text.toString())
+        }
+        else {
+            search(searchBar.text.toString())
+        }
+    }
+
+
+    fun search(name: String) {
+
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        //var listaIgara: List<Game> = ArrayList<Game>()
+        var result: List<Game>? = null
+        scope.launch {
+            // Vrti se poziv servisa i suspendira se rutina dok se `withContext` ne zavrsi
+            //print("REZULTAT ")
+            val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+            result = GamesRepository.getGamesByName(name)
+            gamesList = GamesRepository.GamesList
+            scope1.launch {
+                //result = GamesRepository.getGamesByName(name)
+                //gamesList = result as List<Game>
+                gamesAdapter.updateGames(gamesList)
+            }
+        }
+    }
+
+    fun safeSearch(name:String) {
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        //var listaIgara: List<Game> = ArrayList<Game>()
+        var result: List<Game>? = null
+        scope.launch {
+            // Vrti se poziv servisa i suspendira se rutina dok se `withContext` ne zavrsi
+            //print("REZULTAT ")
+            val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+            result = GamesRepository.getGamesSafe(name)
+            gamesList = GamesRepository.GamesList
+            scope1.launch {
+                //result = GamesRepository.getGamesByName(name)
+                //gamesList = result as List<Game>
+                gamesAdapter.updateGames(gamesList)
+            }
+        }
+    }
+
+
+    fun sortView() {
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            GamesRepository.sortGames()
+            gamesList = GamesRepository.GamesList
+            val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+            scope1.launch {
+                gamesAdapter.updateGames(gamesList)
+            }
+        }
+    }
+
 
     companion object {
         /**
