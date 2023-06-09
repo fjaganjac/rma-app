@@ -109,7 +109,7 @@ object GamesRepository {
                     var id = item.id
 
                     var igra = Game(id, title, platforme2, datum, roundoff, coverUrl, ratingStr, dev, pub, zanr, desc, impresioni)
-                    println(igra.toString())
+                    //println(igra.toString())
                     lista.add(igra)
                 }
                 GamesList = lista

@@ -64,26 +64,35 @@ object AccountGamesRepository {
 
     suspend fun removeNonSafe(): Boolean {
         return withContext(Dispatchers.IO) {
-            var response = AccountApiConfig.ApiAdapter.retrofit.getSavedGames()
+
+            var response = GamesRepository.GamesList
+            val lista :MutableList<Game> = ArrayList()
             for(item in response) {
                 var ageRating = 0
-                when(item.esrbRating) {
-                    "RP"-> ageRating = 99
-                    "EC" ->ageRating = 3
-                    "E" -> ageRating = 3
-                    "E10" -> ageRating = 10
-                    "T" -> ageRating = 13
-                    "M" -> ageRating = 17
-                    "A0" -> ageRating = 18
-                    "PEGI 3" -> ageRating = 3
-                    "PEGI 7" -> ageRating = 7
-                    "PEGI 12" -> ageRating = 12
-                    "PEGI 16" -> ageRating = 16
-                    "PEGI 18" -> ageRating = 18
+                if (item.esrbRating!=null) {
+                    when(item.esrbRating) {
+                        "RP"-> ageRating = 99
+                        "EC" ->ageRating = 3
+                        "E" -> ageRating = 3
+                        "E10" -> ageRating = 10
+                        "T" -> ageRating = 13
+                        "M" -> ageRating = 17
+                        "A0" -> ageRating = 18
+                        "PEGI 3" -> ageRating = 3
+                        "PEGI 7" -> ageRating = 7
+                        "PEGI 12" -> ageRating = 12
+                        "PEGI 16" -> ageRating = 16
+                        "PEGI 18" -> ageRating = 18
+                    }
+                    if(age >= ageRating) {
+                        lista.add(GamesRepository.getGamesByName(item.title)[0])
+                    }
+                    else {
+                        removeGame(item.id)
+                    }
                 }
-                if(age < ageRating) {
-                    AccountApiConfig.ApiAdapter.retrofit.RemoveGame(item.id)
-                }
+
+                GamesRepository.GamesList = lista
             }
             return@withContext true
         }
@@ -91,13 +100,15 @@ object AccountGamesRepository {
 
     suspend fun getGamesContainingString(query:String): List<Game> {
         return withContext(Dispatchers.IO) {
-            var response = AccountApiConfig.ApiAdapter.retrofit.getSavedGames()
+            var response = GamesRepository.GamesList
+            println("REZ "+response)
             val lista :MutableList<Game> = ArrayList()
             for(item in response) {
                 if(item.title.contains(query)) {
-                    lista.add(item)
+                    lista.add(GamesRepository.getGamesByName(item.title)[0])
                 }
             }
+
             return@withContext lista
         }
     }

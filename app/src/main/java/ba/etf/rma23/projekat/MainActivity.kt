@@ -9,7 +9,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.rma_spirala.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     companion object {
         var prev = Game(-1,"","","",0.0,"","","","","","",listOf<UserImpression>())
     }

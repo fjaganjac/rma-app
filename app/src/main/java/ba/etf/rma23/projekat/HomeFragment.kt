@@ -110,7 +110,7 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     override fun onItemClick(position: Int) {
         //println("ASDASDASDSADASDASDASDASDASDADADD")
         val game = gamesList[position]
-        HomeActivity.prev = game
+        MainActivity.prev = game
         previousGame = game
 
 
