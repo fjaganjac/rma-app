@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.forEach
 import androidx.core.view.get
+import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import com.example.rma_spirala.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -33,7 +36,7 @@ class AccountFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
+    private lateinit var setAgeEditText: EditText
     private lateinit var setAgeButton: Button
 
     override fun onCreateView(
@@ -41,13 +44,8 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var view = inflater.inflate(R.layout.fragment_account, container, false)
-         setAgeButton = view.findViewById(R.id.set_age_button)
+
         val navView: BottomNavigationView? = activity?.findViewById(R.id.bottom_nav)
-
-        /*if (navView != null) {
-            navView.selectedItemId = R.id.accountFragment
-        }*/
-
         var i = 0
         navView?.menu?.forEach {
             if(i==0) {
@@ -55,8 +53,28 @@ class AccountFragment : Fragment() {
             }
             i++
         }
+
+        setAgeButton = view.findViewById(R.id.set_age_button)
+        setAgeButton.setOnClickListener {
+            setAge()
+        }
+        setAgeEditText = view.findViewById(R.id.set_age_edittext)
+
+
+
         //navView?.menu?.getItem(R.id.gameDetailsFragment)?.isEnabled = false
         return view
+    }
+
+
+    private fun setAge() {
+        if(setAgeEditText.text != null) {
+            var value = setAgeEditText.text.toString().toInt()
+            //println("BLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+value)
+            AccountGamesRepository.setAge(value)
+            val toast = Toast.makeText(context, "Age changed successfully", Toast.LENGTH_SHORT)
+            toast.show()
+        }
     }
 
     companion object {
