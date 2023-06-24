@@ -16,7 +16,6 @@ data class DeleteResponse(
 
 class AccountApiConfig {
 
-    private val Hash :String = "d8da4bfc-fc15-4463-ae5a-6dc2c731366a";
     var age = 0;
     interface Api {
 

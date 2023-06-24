@@ -68,7 +68,6 @@ data class GameResponse(
     @SerializedName("summary") val summary: String,
     @SerializedName("age_ratings") val age_ratings: List<AgeRating>?,
 
-
 )
 
 class IGDBApiConfig {
@@ -78,11 +77,7 @@ class IGDBApiConfig {
             "Client-ID: xgjrd2i4btzgwaxav98no3o6lhoqfk",
             "Authorization: Bearer mt6h9p07m6y0uwk7mtgogoglvwg5rh"
         )
-        suspend fun getGamesByName(    //dohvaca 10 igrica sa tim imenom
-            //name: String,
-            //@Query("api_key") apiKey: String = BuildConfig.TMDB_API_KEY,
-            /*@Header("Client-ID") clientId: String = "xgjrd2i4btzgwaxav98no3o6lhoqfk",
-            @Header("Authorization") authorization: String = "Bearer mt6h9p07m6y0uwk7mtgogoglvwg5rh",*/
+        suspend fun getGamesByName(
             @Body body: RequestBody
 
         ): Response<List<GameResponse>>
