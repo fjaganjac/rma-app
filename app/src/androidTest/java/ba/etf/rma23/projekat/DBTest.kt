@@ -118,7 +118,7 @@ class DBTest {
         var rez =
             GameReviewsRepository.sendReview(
                 context,
-                GameReview(0, 3, "dobro", idIGRE, false, "", "")
+                GameReview(3, "dobro", idIGRE, false, "", "")
             )
         assert(!rez) { "Should return false" }
         executeCountAndCheck(countNotOnline, "broj_reviews", 1)
@@ -129,7 +129,7 @@ class DBTest {
         var uia = InstrumentationRegistry.getInstrumentation().uiAutomation
         uia.executeShellCommand("svc wifi enable")
         uia.executeShellCommand("svc data enable")
-        Thread.sleep(2000)
+        Thread.sleep(7000)  //morao sam povecati jer su mi padala zadnja 2 testa
         var rez = GameReviewsRepository.sendOfflineReviews(context)
         assertEquals(rez, 1)
         executeCountAndCheck(countNotOnline, "broj_reviews", 0)

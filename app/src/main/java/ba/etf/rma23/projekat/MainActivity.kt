@@ -59,11 +59,15 @@ class MainActivity : AppCompatActivity() {
 
 
         val grCrash = GameReview(0, 3,"nije losa iskreno", 1189, false,"","")
+        val grCrash1 = GameReview(0, 1,"uzasss", 1189, false,"","")
+
         val grHitman = GameReview(0, 2,"dobraaaa", 11157, false,"","")
         val grTetris2 = GameReview(0, 4,"sta je tetris2", 9083, false,"","")
         val grHitman1 = GameReview(0, 2,"nije dobra nidje veze", 11157, false,"","")
 
-        //sendReview(this, grHitman1)
+        /*sendReview(this, grCrash)
+        sendReview(this, grCrash1)*/
+
 
         //sendReviewsToService(this)
         /*sendReviewToDB(this,grTetris2)
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         //sendReviewsToService(this)
         //nukeReviews(this)
         //testGetByID(11157)
-        getReviewsById(11157)
+        //getReviewsById(1189)
     }
 
     private fun testGetByID(id: Int) {

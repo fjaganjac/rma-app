@@ -66,7 +66,7 @@ object GameReviewsRepository {
                 if (response.code() != 200) {
                     var db = AppDatabase.getInstance(context)
                     db!!.GRDAO().insertAll(gameReview)
-                    println("a4_:" + "poslao sam" +gameReview)
+                    println("a4_:" + "poslao sam" + gameReview)
                     boolResponse = false
                 } else {
                     boolResponse = true
@@ -87,7 +87,7 @@ object GameReviewsRepository {
         return withContext(Dispatchers.IO) {
             try {
                 println("a5_: prosljedjeni int" + igdb_id)
-                val response = GameReviewsApiConfig.ApiAdapter.retrofit.getReviews(igdb_id)
+                var response = GameReviewsApiConfig.ApiAdapter.retrofit.getReviews(igdb_id)
                 println("a5_: ispis ispod poziva")
                 val listaKomentara = response.body()
                 val rez: MutableList<GameReview> = mutableListOf()
@@ -99,7 +99,7 @@ object GameReviewsRepository {
                                 0,
                                 it.rating,
                                 it.review,
-                                it.id,
+                                it.GameId,
                                 true,
                                 it.student,
                                 it.timestamp
@@ -107,10 +107,10 @@ object GameReviewsRepository {
                         )
                     }
                 }
-                println("a5_: lista komentara" + rez)
+                println("a5_: lista komentara " + rez)
                 return@withContext rez
             } catch (e: Exception) {
-                println("a5_: izuzetakk" + e.message)
+                println("a5_: izuzetakk " + e.message)
 
                 return@withContext listOf<GameReview>()
             }
