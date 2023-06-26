@@ -37,7 +37,7 @@ class GameReviewsApiConfig {
 
         @GET("game/{game_id}/gamereviews")
         suspend fun getReviews(
-            @Path("game_id") game_id: String
+            @Path("game_id") game_id: Int
         ): Response<List<GameReviewResponse>>
 
     }

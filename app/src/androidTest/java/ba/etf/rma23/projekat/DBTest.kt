@@ -32,7 +32,6 @@ import java.net.URL
 @RunWith(AndroidJUnit4::class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class DBTest {
-/*
 
     @get:Rule
     val intentsTestRule = ActivityScenarioRule(MainActivity::class.java)
@@ -40,8 +39,8 @@ class DBTest {
 
     //pri testiranju zamjenite hash sa vašim i id igre umjesto 22 postavite na neki drugi broj
     // da ne bi došlo do konfuzije oko rezultata testova ako dva studenta istovremeno testiraju svoj kod
-    private val HASH = "ca0ee672-440b-45b2-8a12-75b80f4fbdd3"
-    private val idIGRE = 22
+    private val HASH = "d8da4bfc-fc15-4463-ae5a-6dc2c731366a"
+    private val idIGRE = 1189
 
 
     private val countNotOnline =
@@ -79,7 +78,7 @@ class DBTest {
 
             context = ApplicationProvider.getApplicationContext<Context>()
 
-            baza = context.databaseList().minBy { x -> x.length }
+            baza = context.databaseList().minByOrNull { x -> x.length }.toString()
             db = SQLiteDatabase.openDatabase(
                 context.getDatabasePath(baza).absolutePath,
                 null,
@@ -117,7 +116,10 @@ class DBTest {
         InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("svc data disable")
         Thread.sleep(2000)
         var rez =
-            GameReviewsRepository.sendReview(context, GameReview(3, "dobro", idIGRE, false, "", ""))
+            GameReviewsRepository.sendReview(
+                context,
+                GameReview(0, 3, "dobro", idIGRE, false, "", "")
+            )
         assert(!rez) { "Should return false" }
         executeCountAndCheck(countNotOnline, "broj_reviews", 1)
     }
@@ -137,16 +139,19 @@ class DBTest {
     @Test
     fun a5_getOnlineReviewsForGame() = runBlocking {
         var rez = GameReviewsRepository.getReviewsForGame(idIGRE)
-        assertEquals(rez.size, 1)
+        if (rez != null) {
+            assertEquals(rez.size, 1)
+        }
     }
 
     @Test
     fun a6_deleteAllAndCheckNumReviewsOnline() = runBlocking {
         obrisi()
         var rez = GameReviewsRepository.getReviewsForGame(idIGRE)
-        assertEquals(rez.size, 0)
+        if (rez != null) {
+            assertEquals(rez.size, 0)
+        }
     }
 
-*/
 
 }

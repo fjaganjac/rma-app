@@ -28,49 +28,67 @@ object GamesRepository {
                 "fields name, rating, platforms.name, release_dates.human, cover.url, involved_companies.company.name, genres.name, summary, age_ratings.category, age_ratings.rating;\n" +
                         "where id = $igdb_id;"
             var reqbody = RequestBody.create(MediaType.parse("text/plain"), body)
-            var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(reqbody)
+            try {
+                var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(reqbody)
 
-            var igrica = Game(-1, "", "", "", 0.0, "", "", "", "", "", "", listOf<UserImpression>())
-            if (response.code() == 200) {
-                var resbody = response.body()?.get(0)
-                igrica = resbody?.let {
-                    var ratingStr = "Unrated"
-                    if (resbody.age_ratings?.get(0)?.category == 1) {   //1 -> ESRB
-                        when (resbody.age_ratings!![0].rating) {
-                            6 -> ratingStr = "RP"
-                            7 -> ratingStr = "EC"
-                            8 -> ratingStr = "E"
-                            9 -> ratingStr = "E10"
-                            10 -> ratingStr = "T"
-                            11 -> ratingStr = "M"
-                            12 -> ratingStr = "AO"
+                var igrica =
+                    Game(-1, "", "", "", 0.0, "", "", "", "", "", "", listOf<UserImpression>())
+                if (response.code() == 200) {
+                    var resbody = response.body()?.get(0)
+                    igrica = resbody?.let {
+                        var ratingStr = "Unrated"
+                        if (resbody.age_ratings?.get(0)?.category == 1) {   //1 -> ESRB
+                            when (resbody.age_ratings!![0].rating) {
+                                6 -> ratingStr = "RP"
+                                7 -> ratingStr = "EC"
+                                8 -> ratingStr = "E"
+                                9 -> ratingStr = "E10"
+                                10 -> ratingStr = "T"
+                                11 -> ratingStr = "M"
+                                12 -> ratingStr = "AO"
+                            }
+                        } else if (resbody.age_ratings?.get(0)?.category == 2) {   //2 -> PEGI
+                            when (resbody.age_ratings!![0].rating) {
+                                1 -> ratingStr = "PEGI 3"
+                                2 -> ratingStr = "PEGI 7"
+                                3 -> ratingStr = "PEGI 12"
+                                4 -> ratingStr = "PEGI 16"
+                                5 -> ratingStr = "PEGI 18"
+                            }
                         }
-                    } else if (resbody.age_ratings?.get(0)?.category == 2) {   //2 -> PEGI
-                        when (resbody.age_ratings!![0].rating) {
-                            1 -> ratingStr = "PEGI 3"
-                            2 -> ratingStr = "PEGI 7"
-                            3 -> ratingStr = "PEGI 12"
-                            4 -> ratingStr = "PEGI 16"
-                            5 -> ratingStr = "PEGI 18"
-                        }
-                    }
-                    Game(
-                        it.id,
-                        resbody.name,
-                        resbody.platforms[0].toString(),
-                        resbody.release_dates[0].toString(),
-                        resbody.rating,
-                        resbody.cover.url,
-                        ratingStr,
-                        resbody.companies[0].company.name,
-                        resbody.companies[0].company.name,
-                        resbody.genres[0].name,
-                        resbody.summary,
-                        listOf<UserImpression>()
-                    )
-                }!!
+                        Game(
+                            it.id,
+                            resbody.name,
+                            resbody.platforms[0].toString(),
+                            resbody.release_dates[0].toString(),
+                            resbody.rating,
+                            resbody.cover.url,
+                            ratingStr,
+                            resbody.companies[0].company.name,
+                            resbody.companies[0].company.name,
+                            resbody.genres[0].name,
+                            resbody.summary,
+                            listOf<UserImpression>()
+                        )
+                    }!!
+                }
+                return@withContext igrica
+            } catch (e: Exception) {
+                return@withContext Game(
+                    -1,
+                    "",
+                    "",
+                    "",
+                    0.0,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    listOf<UserImpression>()
+                )
             }
-            return@withContext igrica
         }
 
 
@@ -87,101 +105,105 @@ object GamesRepository {
                         "limit 10;"
             //println("FIELDS " + fields)
             val requestBody = RequestBody.create(MediaType.parse("text/plain"), fields)
-            var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(requestBody)
+            try {
+                var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(requestBody)
 
-            val lista: MutableList<Game> = ArrayList()
-            var resBody = response.body()
-            if (resBody != null) {
-                for (item in resBody) {
-                    var ratingStr = "Unrated"
-                    if (item.age_ratings?.get(0)?.category == 1) {   //1 -> ESRB
-                        when (item.age_ratings[0].rating) {
-                            6 -> ratingStr = "RP"
-                            7 -> ratingStr = "EC"
-                            8 -> ratingStr = "E"
-                            9 -> ratingStr = "E10"
-                            10 -> ratingStr = "T"
-                            11 -> ratingStr = "M"
-                            12 -> ratingStr = "AO"
+                val lista: MutableList<Game> = ArrayList()
+                var resBody = response.body()
+                if (resBody != null) {
+                    for (item in resBody) {
+                        var ratingStr = "Unrated"
+                        if (item.age_ratings?.get(0)?.category == 1) {   //1 -> ESRB
+                            when (item.age_ratings[0].rating) {
+                                6 -> ratingStr = "RP"
+                                7 -> ratingStr = "EC"
+                                8 -> ratingStr = "E"
+                                9 -> ratingStr = "E10"
+                                10 -> ratingStr = "T"
+                                11 -> ratingStr = "M"
+                                12 -> ratingStr = "AO"
+                            }
+                        } else if (item.age_ratings?.get(0)?.category == 2) {   //2 -> PEGI
+                            when (item.age_ratings[0].rating) {
+                                1 -> ratingStr = "PEGI 3"
+                                2 -> ratingStr = "PEGI 7"
+                                3 -> ratingStr = "PEGI 12"
+                                4 -> ratingStr = "PEGI 16"
+                                5 -> ratingStr = "PEGI 18"
+                            }
                         }
-                    } else if (item.age_ratings?.get(0)?.category == 2) {   //2 -> PEGI
-                        when (item.age_ratings[0].rating) {
-                            1 -> ratingStr = "PEGI 3"
-                            2 -> ratingStr = "PEGI 7"
-                            3 -> ratingStr = "PEGI 12"
-                            4 -> ratingStr = "PEGI 16"
-                            5 -> ratingStr = "PEGI 18"
+                        var title = item.name
+
+                        var datum = ""
+                        if (item.release_dates != null) {
+                            datum = item.release_dates[0].human
                         }
-                    }
-                    var title = item.name
 
-                    var datum = ""
-                    if (item.release_dates != null) {
-                        datum = item.release_dates[0].human
-                    }
-
-                    var platforme = item.platforms
-                    var platforme2 = ""
-                    if (platforme != null) {
-                        for (platforma in platforme) {
-                            platforme2 += platforma.name + "/"
+                        var platforme = item.platforms
+                        var platforme2 = ""
+                        if (platforme != null) {
+                            for (platforma in platforme) {
+                                platforme2 += platforma.name + "/"
+                            }
                         }
+                        platforme2 = platforme2.dropLast(1)
+
+                        var ratingMoj = 0.0
+                        if (item.rating != null) {
+                            ratingMoj = item.rating
+                        }
+                        val roundoff = (ratingMoj * 10.0).roundToInt() / 10.0
+
+
+                        var coverUrl = ""    //provjera na null
+                        if (item.cover != null) {
+                            coverUrl = item.cover.url
+                        }
+
+
+                        var dev = "Unknown"         //null check
+                        if (item.companies != null) {
+                            dev = item.companies[0]?.company?.name
+                        }
+                        var pub = dev
+
+                        var zanr = ""
+                        if (item.genres != null) {
+                            zanr = item.genres[0].name
+                        }
+
+                        var desc = ""
+                        if (item.summary != null) {
+                            desc = item.summary
+                        }
+
+                        val impresioni: MutableList<UserImpression> = ArrayList()
+                        var id = item.id
+
+                        var igra = Game(
+                            id,
+                            title,
+                            platforme2,
+                            datum,
+                            roundoff,
+                            coverUrl,
+                            ratingStr,
+                            dev,
+                            pub,
+                            zanr,
+                            desc,
+                            impresioni
+                        )
+                        //println(igra.toString())
+                        lista.add(igra)
                     }
-                    platforme2 = platforme2.dropLast(1)
-
-                    var ratingMoj = 0.0
-                    if (item.rating != null) {
-                        ratingMoj = item.rating
-                    }
-                    val roundoff = (ratingMoj * 10.0).roundToInt() / 10.0
-
-
-                    var coverUrl = ""    //provjera na null
-                    if (item.cover != null) {
-                        coverUrl = item.cover.url
-                    }
-
-
-                    var dev = "Unknown"         //null check
-                    if (item.companies != null) {
-                        dev = item.companies[0]?.company?.name
-                    }
-                    var pub = dev
-
-                    var zanr = ""
-                    if (item.genres != null) {
-                        zanr = item.genres[0].name
-                    }
-
-                    var desc = ""
-                    if (item.summary != null) {
-                        desc = item.summary
-                    }
-
-                    val impresioni: MutableList<UserImpression> = ArrayList()
-                    var id = item.id
-
-                    var igra = Game(
-                        id,
-                        title,
-                        platforme2,
-                        datum,
-                        roundoff,
-                        coverUrl,
-                        ratingStr,
-                        dev,
-                        pub,
-                        zanr,
-                        desc,
-                        impresioni
-                    )
-                    //println(igra.toString())
-                    lista.add(igra)
+                    GamesList = lista
                 }
-                GamesList = lista
-            }
 
-            return@withContext lista
+                return@withContext lista
+            } catch (e: Exception) {
+                return@withContext listOf<Game>()
+            }
         }
     }
 

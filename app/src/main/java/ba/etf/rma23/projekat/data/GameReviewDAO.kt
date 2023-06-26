@@ -1,9 +1,6 @@
 package ba.etf.rma23.projekat.data
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import ba.etf.rma23.projekat.GameReview
 
 @Dao
@@ -14,7 +11,7 @@ interface GameReviewDAO {
     @Query("UPDATE GameReview SET online = true WHERE online = false")
     suspend fun setOnlineToTrue(): Int
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg GameReviews: GameReview)
 
     @Query("DELETE FROM GameReview WHERE 1 = 1")

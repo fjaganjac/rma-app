@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import ba.etf.rma23.projekat.GameReview
 
 
-@Database(entities = arrayOf(GameReview::class), version = 2)
+@Database(entities = arrayOf(GameReview::class), version = 1, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun GRDAO(): GameReviewDAO
 

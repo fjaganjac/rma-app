@@ -58,22 +58,24 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val grCrash = GameReview(0, 3,"nije losa iskreno", 1189, false)
-        val grHitman = GameReview(0, 2,"dobraaaa", 11157, false)
-        val grTetris2 = GameReview(0, 4,"sta je tetris2", 9083, false)
-        val grHitman1 = GameReview(0, 2,"nije dobra nidje veze", 11157, false)
+        val grCrash = GameReview(0, 3,"nije losa iskreno", 1189, false,"","")
+        val grHitman = GameReview(0, 2,"dobraaaa", 11157, false,"","")
+        val grTetris2 = GameReview(0, 4,"sta je tetris2", 9083, false,"","")
+        val grHitman1 = GameReview(0, 2,"nije dobra nidje veze", 11157, false,"","")
 
         //sendReview(this, grHitman1)
 
         //sendReviewsToService(this)
-        //sendReviewToDB(this,grTetris2)
-        //sendReviewToDB(this,grCrash)
-        //sendReviewToDB(this,grHitman)
+        /*sendReviewToDB(this,grTetris2)
+        sendReviewToDB(this,grCrash)
+        sendReviewToDB(this,grHitman)
+        sendReviewToDB(this,grHitman1)*/
+
         //getFromDB(this)
         //sendReviewsToService(this)
         //nukeReviews(this)
         //testGetByID(11157)
-        getReviewsById(this,11157)
+        getReviewsById(11157)
     }
 
     private fun testGetByID(id: Int) {
@@ -127,11 +129,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getReviewsById(context: Context, igdb_id: Int) {
+    private fun getReviewsById( igdb_id: Int) {
         val scope = CoroutineScope(Job() + Dispatchers.IO)
         scope.launch {
             var l=GameReviewsRepository.getReviewsForGame(igdb_id)
-            Log.i("test2",l.toString())
+            Log.i("test2",l.toString() +"  " +l.size)
         }
     }
 

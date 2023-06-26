@@ -12,4 +12,6 @@ data class GameReview (
     @ColumnInfo(name = "review") @SerializedName("review")  var review: String?,
     @ColumnInfo(name = "igdb_id") @SerializedName("igdb_id")  var igdb_id: Int,
     @ColumnInfo(name = "online") @SerializedName("online")  var online: Boolean,
+    @ColumnInfo(name = "student") @SerializedName("student")  var student: String,
+    @ColumnInfo(name = "timestamp") @SerializedName("timestamp")  var timestamp: String,
     )

@@ -39,6 +39,7 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
             param2 = it.getString(ARG_PARAM2)
         }
     }
+
     private lateinit var searchButton: Button
     private lateinit var searchBar: EditText
     private lateinit var sortButton: Button
@@ -47,15 +48,15 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
 
     private lateinit var gamesRecyclerView: RecyclerView
     private var gamesList = listOf<Game>()
-    private var gamesAdapter = GameAdapter(gamesList,this)
-    private var previousGame = Game(-1,"","","",0.0,"","","","","","",listOf<UserImpression>())
+    private var gamesAdapter = GameAdapter(gamesList, this)
+    private var previousGame =
+        Game(-1, "", "", "", 0.0, "", "", "", "", "", "", listOf<UserImpression>())
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
 
 
         var view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -88,11 +89,13 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         var result: List<Game>? = null
         scope.launch {
             result = AccountGamesRepository.getSavedGames()
-            //println("Date "+ result!!.get(0).releaseDate)
+
             val scope1 = CoroutineScope(Job() + Dispatchers.Main)
             scope1.launch {
-                for(item in result!!) {
-                    listaIgara.add(GamesRepository.getGamesByName(item.title)[0])
+                for (item in result!!) {
+                    var res = GamesRepository.getGamesByName(item.title)
+                    if (res.isNotEmpty())
+                        listaIgara.add(res[0])
                 }
                 gamesList = listaIgara
                 gamesAdapter.updateGames(listaIgara)
@@ -117,23 +120,23 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         val selectedGameBundle = Bundle()
         var obj = game
         //selectedGameBundle.putString("game_title", game.title)
-        selectedGameBundle.putSerializable("game",obj)
+        selectedGameBundle.putSerializable("game", obj)
 
         val destination = GameDetailsFragment()
         destination.arguments = selectedGameBundle
         val navView: BottomNavigationView? = activity?.findViewById(R.id.bottom_nav)
         if (navView != null) {
-            navView.selectedItemId= R.id.gameDetailsFragment
+            navView.selectedItemId = R.id.gameDetailsFragment
         }
         navView?.menu?.forEach { it.isEnabled = true }
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.nav_host_fragment,destination)?.commit()
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.nav_host_fragment, destination)?.commit()
     }
 
     private fun onClick() {
-        if(safeSearchSwitch.isChecked) {
+        if (safeSearchSwitch.isChecked) {
             safeSearch(searchBar.text.toString())
-        }
-        else {
+        } else {
             search(searchBar.text.toString())
         }
     }
@@ -158,7 +161,7 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         }
     }
 
-    fun safeSearch(name:String) {
+    fun safeSearch(name: String) {
         val scope = CoroutineScope(Job() + Dispatchers.IO)
         //var listaIgara: List<Game> = ArrayList<Game>()
         var result: List<Game>? = null

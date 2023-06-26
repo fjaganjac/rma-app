@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import java.lang.Exception
 
 object GameReviewsRepository {
 
@@ -28,6 +29,7 @@ object GameReviewsRepository {
                 sendReview(context, item)
             }
             db.GRDAO().setOnlineToTrue()
+            println("a4_: broj offline" + reviews.size)
             return@withContext reviews.size
         }
     }
@@ -39,13 +41,13 @@ object GameReviewsRepository {
         return withContext(Dispatchers.IO) {
             var accountRepoRes = AccountGamesRepository.getSavedGames()
             var imaSpasena = false
-            for(it in accountRepoRes) {
-                if(it.id == gameReview.igdb_id) {
+            for (it in accountRepoRes) {
+                if (it.id == gameReview.igdb_id) {
                     imaSpasena = true
                     break
                 }
             }
-            if(!imaSpasena) {
+            if (!imaSpasena) {
                 val game = GamesRepository.getGameByID(gameReview.igdb_id)
                 AccountGamesRepository.saveGame(game)
             }
@@ -54,25 +56,65 @@ object GameReviewsRepository {
                     "  \"rating\": ${gameReview.rating}\n" +
                     "}"
             val reqbody = RequestBody.create(MediaType.parse("text/plain"), body)
-            val response = GameReviewsApiConfig.ApiAdapter.retrofit.sendReview("d8da4bfc-fc15-4463-ae5a-6dc2c731366a", gameReview.igdb_id, reqbody)
-            var boolResponse: Boolean
-            if (response.code() != 200) {
+            try {
+                val response = GameReviewsApiConfig.ApiAdapter.retrofit.sendReview(
+                    "d8da4bfc-fc15-4463-ae5a-6dc2c731366a",
+                    gameReview.igdb_id,
+                    reqbody
+                )
+                var boolResponse: Boolean
+                if (response.code() != 200) {
+                    var db = AppDatabase.getInstance(context)
+                    db!!.GRDAO().insertAll(gameReview)
+                    println("a4_:" + "poslao sam" +gameReview)
+                    boolResponse = false
+                } else {
+                    boolResponse = true
+                }
+                return@withContext boolResponse
+
+            } catch (e: Exception) {
                 var db = AppDatabase.getInstance(context)
                 db!!.GRDAO().insertAll(gameReview)
-                boolResponse = false
-            } else {
-                boolResponse = true
+                println("a4_:" + "poslao sam" + gameReview)
+                return@withContext false
             }
-            return@withContext boolResponse
+
         }
     }
 
-    suspend fun getReviewsForGame(igdb_id: Int): List<GameReviewResponse>? {
+    suspend fun getReviewsForGame(igdb_id: Int): List<GameReview> {
         return withContext(Dispatchers.IO) {
-            val response = GameReviewsApiConfig.ApiAdapter.retrofit.getReviews(igdb_id.toString())
+            try {
+                println("a5_: prosljedjeni int" + igdb_id)
+                val response = GameReviewsApiConfig.ApiAdapter.retrofit.getReviews(igdb_id)
+                println("a5_: ispis ispod poziva")
+                val listaKomentara = response.body()
+                val rez: MutableList<GameReview> = mutableListOf()
 
-            val listaKomentara = response.body()
-            return@withContext listaKomentara
+                if (listaKomentara != null) {
+                    for (it in listaKomentara) {
+                        rez.add(
+                            GameReview(
+                                0,
+                                it.rating,
+                                it.review,
+                                it.id,
+                                true,
+                                it.student,
+                                it.timestamp
+                            )
+                        )
+                    }
+                }
+                println("a5_: lista komentara" + rez)
+                return@withContext rez
+            } catch (e: Exception) {
+                println("a5_: izuzetakk" + e.message)
+
+                return@withContext listOf<GameReview>()
+            }
+
         }
     }
 
