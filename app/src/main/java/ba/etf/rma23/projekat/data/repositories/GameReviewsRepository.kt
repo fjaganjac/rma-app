@@ -58,7 +58,7 @@ object GameReviewsRepository {
             val reqbody = RequestBody.create(MediaType.parse("text/plain"), body)
             try {
                 val response = GameReviewsApiConfig.ApiAdapter.retrofit.sendReview(
-                    "d8da4bfc-fc15-4463-ae5a-6dc2c731366a",
+                    AccountGamesRepository.getHash(),
                     gameReview.igdb_id,
                     reqbody
                 )
