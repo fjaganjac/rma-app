@@ -1,18 +1,18 @@
 package ba.etf.rma23.projekat
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
+import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository
 import com.example.rma_spirala.R
+import com.google.android.material.slider.Slider
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +55,9 @@ class GameDetailsFragment : Fragment() {
     private lateinit var userImpressionRecyclerView: RecyclerView
     private lateinit var saveButtonView : Button
     private lateinit var removeButtonView : Button
+    private lateinit var reviewReviewView : EditText
+    private lateinit var reviewRatingView : Slider
+    private lateinit var sendReviewButton: Button
 
 
     override fun onCreateView(
@@ -81,6 +84,11 @@ class GameDetailsFragment : Fragment() {
         removeButtonView = view.findViewById(R.id.remove_button)
         removeButtonView.setOnClickListener { removeGame() }
 
+        reviewReviewView = view.findViewById(R.id.ReviewReviewEditText)
+        reviewRatingView = view.findViewById(R.id.ReviewRatingSlider)
+        sendReviewButton = view.findViewById(R.id.sendReviewButton)
+        sendReviewButton.setOnClickListener { reviewSend() }
+
         arguments?.getSerializable("game")?.let {
             game= it as Game
             titleView.text = game.title
@@ -100,6 +108,8 @@ class GameDetailsFragment : Fragment() {
             if (game.userImpressions.isEmpty())
                 userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
         }
+
+        println("GAMEID:"+game.id)
         return view
     }
 
@@ -119,6 +129,19 @@ class GameDetailsFragment : Fragment() {
         scope.launch {
             AccountGamesRepository.removeGame(game.id)
         }
+
+    }
+
+    private fun reviewSend() {
+        val gam = GameReview(reviewRatingView.value.toInt(),reviewReviewView.text.toString(),game.id,false,"","")
+        CoroutineScope(Job() + Dispatchers.IO).launch {
+            context?.let { GameReviewsRepository.sendReview(it,gam) }
+        }
+        reviewReviewView.setText("")
+        reviewRatingView.value = 0F
+        val toast = Toast.makeText(context, "Review Submitted", Toast.LENGTH_SHORT)
+        toast.show()
+
 
     }
 

@@ -237,6 +237,56 @@
                         android:text="TextView" />
 
                 </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp">
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Leave a Review"
+                        android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/ReviewReviewEditText"
+                        android:layout_width="260dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="start"
+                        android:hint="Comment"
+                        />
+                </TableRow>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/ReviewRatingSlider"
+                        android:contentDescription="awdad"
+                        android:valueFrom="0"
+                        android:valueTo="5"
+                        android:stepSize="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:id="@+id/sendReviewButton"
+                        android:layout_marginStart="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text = "Submit"/>
+
+
+                </LinearLayout>
             </TableLayout>
 
             <androidx.recyclerview.widget.RecyclerView
