@@ -93,7 +93,6 @@ class AccountFragment : Fragment() {
         var result: List<Game>? = null
         scope.launch {
             result = AccountGamesRepository.getSavedGames()
-            //println("Date "+ result!!.get(0).releaseDate)
             val scope1 = CoroutineScope(Job() + Dispatchers.Main)
             for(item in result!!) {
                 listaIgara.add(GamesRepository.getGamesByName(item.title)[0])
@@ -104,13 +103,8 @@ class AccountFragment : Fragment() {
                 savedGamesAdapter.updateGames(gamesList)
             }
         }
-
         savedGamesRecyclerView.layoutManager = LinearLayoutManager(activity)
-
         savedGamesRecyclerView.adapter = savedGamesAdapter
-
-
-        //navView?.menu?.getItem(R.id.gameDetailsFragment)?.isEnabled = false
         return view
     }
 

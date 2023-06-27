@@ -8,15 +8,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rma_spirala.R
 
-class GameReviewAdapter(private var Reviews: List<GameReview>) :RecyclerView.Adapter<GameReviewAdapter.ViewHolder>() {
+class GameReviewAdapter(private var Reviews: List<GameReview>) :
+    RecyclerView.Adapter<GameReviewAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
-        var itemUsername : TextView = itemView.findViewById(R.id.game_review_username_textview)
-        var itemReview : TextView = itemView.findViewById(R.id.game_review_review_textview)
-        var itemRating : RatingBar = itemView.findViewById(R.id.game_review_rating_bar)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var itemUsername: TextView = itemView.findViewById(R.id.game_review_username_textview)
+        var itemReview: TextView = itemView.findViewById(R.id.game_review_review_textview)
+        var itemRating: RatingBar = itemView.findViewById(R.id.game_review_rating_bar)
 
-        //val
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -28,6 +29,10 @@ class GameReviewAdapter(private var Reviews: List<GameReview>) :RecyclerView.Ada
         holder.itemUsername.text = Reviews[position].student
         holder.itemReview.text = Reviews[position].review
         holder.itemRating.rating = Reviews[position].rating!!.toFloat()
+
+        if (Reviews[position].rating == 0) {
+            holder.itemRating.visibility = View.INVISIBLE
+        }
     }
 
     override fun getItemCount(): Int {

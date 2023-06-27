@@ -111,7 +111,6 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     }
 
     override fun onItemClick(position: Int) {
-        //println("ASDASDASDSADASDASDASDASDASDADADD")
         val game = gamesList[position]
         MainActivity.prev = game
         previousGame = game
@@ -142,14 +141,10 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
     }
 
 
-    fun search(name: String) {
-
+    private fun search(name: String) {
         val scope = CoroutineScope(Job() + Dispatchers.IO)
-        //var listaIgara: List<Game> = ArrayList<Game>()
         var result: List<Game>? = null
         scope.launch {
-            // Vrti se poziv servisa i suspendira se rutina dok se `withContext` ne zavrsi
-            //print("REZULTAT ")
             val scope1 = CoroutineScope(Job() + Dispatchers.Main)
             result = GamesRepository.getGamesByName(name)
             gamesList = GamesRepository.GamesList
@@ -161,19 +156,14 @@ class HomeFragment : Fragment(), GameAdapter.RecyclerViewEvent {
         }
     }
 
-    fun safeSearch(name: String) {
+    private fun safeSearch(name: String) {
         val scope = CoroutineScope(Job() + Dispatchers.IO)
-        //var listaIgara: List<Game> = ArrayList<Game>()
         var result: List<Game>? = null
         scope.launch {
-            // Vrti se poziv servisa i suspendira se rutina dok se `withContext` ne zavrsi
-            //print("REZULTAT ")
             val scope1 = CoroutineScope(Job() + Dispatchers.Main)
             result = GamesRepository.getGamesSafe(name)
             gamesList = GamesRepository.GamesList
             scope1.launch {
-                //result = GamesRepository.getGamesByName(name)
-                //gamesList = result as List<Game>
                 gamesAdapter.updateGames(gamesList)
             }
         }

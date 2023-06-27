@@ -88,7 +88,6 @@ class IGDBApiConfig {
             "Authorization: Bearer mt6h9p07m6y0uwk7mtgogoglvwg5rh"
         )
         suspend fun getGamesSafe(
-            //name: String,
             @Body body: RequestBody
         ): Response<List<GameResponse>>
     }

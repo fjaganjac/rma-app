@@ -103,7 +103,7 @@ object GamesRepository {
                         "search \"$name\";\n" +
                         "where rating != null;\n" +
                         "limit 10;"
-            //println("FIELDS " + fields)
+
             val requestBody = RequestBody.create(MediaType.parse("text/plain"), fields)
             try {
                 var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(requestBody)
@@ -194,7 +194,6 @@ object GamesRepository {
                             desc,
                             impresioni
                         )
-                        //println(igra.toString())
                         lista.add(igra)
                     }
                     GamesList = lista
@@ -216,7 +215,6 @@ object GamesRepository {
                         "search \"$name\";\n" +
                         "where rating != null;\n" +
                         "limit 10;"
-            //println("FIELDS " + fields)
             val requestBody = RequestBody.create(MediaType.parse("text/plain"), fields)
             var response = IGDBApiConfig.ApiAdapter.retrofit.getGamesByName(requestBody)
 
@@ -344,7 +342,6 @@ object GamesRepository {
                         impresioni
                     )
 
-                    //println("GODINE TRENUTNO "+ AccountGameRepository.age)
                     if (godineInt < AccountGamesRepository.age) {
                         lista.add(igra)
                     }
@@ -381,7 +378,6 @@ object GamesRepository {
                 if (!savedIds.contains(item.id))
                     pomocna.add(item)
             }
-            println("POMOCNA " + pomocna)
             GamesList = pomocna
             return@withContext GamesList
         }

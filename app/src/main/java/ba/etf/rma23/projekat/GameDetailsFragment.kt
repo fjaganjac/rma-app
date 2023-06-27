@@ -42,17 +42,7 @@ class GameDetailsFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
-
-    /*val grCrash = GameReview(0, 3,"nije losa iskreno", 1189, false,"","")
-    val grCrash1 = GameReview(0, 1,"uzasss", 1189, false,"","")
-
-    val grHitman = GameReview(0, 2,"dobraaaa", 11157, false,"","")
-    val grTetris2 = GameReview(0, 4,"sta je tetris2", 9083, false,"","")
-    val grHitman1 = GameReview(0, 2,"nije dobra nidje veze", 11157, false,"","")*/
-    private var revs = listOf<GameReview>(/*
-        GameReview(0, 3,"nije losa iskreno", 1189, false,"ja sam student","123212"),
-        GameReview(0, 1,"uzasss", 1189, false,"ja ja ja","1111111")*/
-    )
+    private var revs = listOf<GameReview>()
 
     private lateinit var game: Game
 
@@ -110,8 +100,6 @@ class GameDetailsFragment : Fragment() {
         arguments?.getSerializable("game")?.let {
             game = it as Game
             titleView.text = game.title
-            /*var id: Int = resources.getIdentifier(game.coverImage, "drawable","ba.etf.rma23.projekat")
-            coverView.setImageResource(id)*/
             Picasso.get().load(game.coverImage).into(coverView)
             platformView.text = game.platform
             releaseDateView.text = game.releaseDate
@@ -122,23 +110,13 @@ class GameDetailsFragment : Fragment() {
             publisherView.text = game.publisher
             genreView.text = game.genre
             descriptionView.text = game.description
-            /*userImpressionRecyclerView.adapter = UserImpressionAdapter(game.userImpressions)
-            if (game.userImpressions.isEmpty())
-                userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT*/
-
-            //userImpressionRecyclerView.adapter = ReviewsAdapter
-            /*if (revs.isEmpty())
-                userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT*/
         }
 
         var result: List<GameReview> = listOf<GameReview>()
         val scope1 = CoroutineScope(Job() + Dispatchers.Main)
 
-        //gamesList = GamesRepository.GamesList
         scope1.launch {
             result = GameReviewsRepository.getReviewsForGame(game.id)
-            //result = GamesRepository.getGamesByName(name)
-            //gamesList = result as List<Game>
             revs = result
             ReviewsAdapter.updateReviews(result)
         }
@@ -146,8 +124,6 @@ class GameDetailsFragment : Fragment() {
         userImpressionRecyclerView.adapter = ReviewsAdapter
         if (revs.isEmpty())
             userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
-
-        println("GAMEID:" + game.id)
         return view
     }
 

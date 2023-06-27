@@ -33,7 +33,6 @@ object AccountGamesRepository {
                 for (item in response) {
                     lista.add(GamesRepository.getGamesByName(item.title)[0])
                 }
-                println("Res RES RES $lista")
                 return@withContext lista
             } catch (e: Exception) {
                 return@withContext listOf<Game>()
@@ -77,7 +76,6 @@ object AccountGamesRepository {
 
     suspend fun removeGame(id: Int): Boolean {
         return withContext(Dispatchers.IO) {
-            //println("PROSLOOOO")
             AccountApiConfig.ApiAdapter.retrofit.RemoveGame(id)
             return@withContext true
         }
@@ -121,7 +119,6 @@ object AccountGamesRepository {
     suspend fun getGamesContainingString(query: String): List<Game> {
         return withContext(Dispatchers.IO) {
             var response = GamesRepository.GamesList
-            println("REZ " + response)
             val lista: MutableList<Game> = ArrayList()
             for (item in response) {
                 if (item.title.contains(query)) {

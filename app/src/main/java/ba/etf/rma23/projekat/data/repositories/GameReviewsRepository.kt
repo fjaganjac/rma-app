@@ -1,7 +1,6 @@
 package ba.etf.rma23.projekat.data.repositories
 
 import android.content.Context
-import android.util.Log
 import ba.etf.rma23.projekat.GameReview
 import ba.etf.rma23.projekat.data.AppDatabase
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +28,6 @@ object GameReviewsRepository {
                 sendReview(context, item)
             }
             db.GRDAO().setOnlineToTrue()
-            println("a4_: broj offline" + reviews.size)
             return@withContext reviews.size
         }
     }
@@ -66,7 +64,6 @@ object GameReviewsRepository {
                 if (response.code() != 200) {
                     var db = AppDatabase.getInstance(context)
                     db!!.GRDAO().insertAll(gameReview)
-                    println("a4_:" + "poslao sam" + gameReview)
                     boolResponse = false
                 } else {
                     boolResponse = true
@@ -76,7 +73,6 @@ object GameReviewsRepository {
             } catch (e: Exception) {
                 var db = AppDatabase.getInstance(context)
                 db!!.GRDAO().insertAll(gameReview)
-                println("a4_:" + "poslao sam" + gameReview)
                 return@withContext false
             }
 
@@ -86,9 +82,7 @@ object GameReviewsRepository {
     suspend fun getReviewsForGame(igdb_id: Int): List<GameReview> {
         return withContext(Dispatchers.IO) {
             try {
-                println("a5_: prosljedjeni int" + igdb_id)
                 var response = GameReviewsApiConfig.ApiAdapter.retrofit.getReviews(igdb_id)
-                println("a5_: ispis ispod poziva")
                 val listaKomentara = response.body()
                 val rez: MutableList<GameReview> = mutableListOf()
 
@@ -107,35 +101,30 @@ object GameReviewsRepository {
                         )
                     }
                 }
-                println("a5_: lista komentara " + rez)
                 return@withContext rez
             } catch (e: Exception) {
-                println("a5_: izuzetakk " + e.message)
-
                 return@withContext listOf<GameReview>()
             }
 
         }
     }
 
-    suspend fun sendReviewToLocalDB(  //ova nema u spirali koristim za testiranje baze
+    suspend fun sendReviewToLocalDB(  //nema u spirali, koristiti za testiranje lokalne baze
         context: Context,
         gameReview: GameReview
     ): String {
         return withContext(Dispatchers.IO) {
-
             var db = AppDatabase.getInstance(context)
             db!!.GRDAO().insertAll(gameReview)
-
-            return@withContext "poslao"
+            return@withContext "reviews sent"
         }
     }
 
-    suspend fun deleteAll(context: Context): String {   //nema ni ovo koristi za brisanje iz lokalne baze
+    suspend fun deleteAll(context: Context): String {   //koristiti za brisanje iz lokalne baze
         return withContext(Dispatchers.IO) {
             var db = AppDatabase.getInstance(context)
             db!!.GRDAO().deleteAll()
-            return@withContext "reviews"
+            return@withContext "deleted"
         }
     }
 
