@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma23.projekat.data.repositories.AccountGamesRepository
 import ba.etf.rma23.projekat.data.repositories.GameReviewsRepository
+import ba.etf.rma23.projekat.data.repositories.GamesRepository
 import com.example.rma_spirala.R
 import com.google.android.material.slider.Slider
 import com.squareup.picasso.Picasso
@@ -41,6 +42,18 @@ class GameDetailsFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
     }
+
+    /*val grCrash = GameReview(0, 3,"nije losa iskreno", 1189, false,"","")
+    val grCrash1 = GameReview(0, 1,"uzasss", 1189, false,"","")
+
+    val grHitman = GameReview(0, 2,"dobraaaa", 11157, false,"","")
+    val grTetris2 = GameReview(0, 4,"sta je tetris2", 9083, false,"","")
+    val grHitman1 = GameReview(0, 2,"nije dobra nidje veze", 11157, false,"","")*/
+    private var revs = listOf<GameReview>(/*
+        GameReview(0, 3,"nije losa iskreno", 1189, false,"ja sam student","123212"),
+        GameReview(0, 1,"uzasss", 1189, false,"ja ja ja","1111111")*/
+    )
+
     private lateinit var game: Game
 
     private lateinit var titleView: TextView
@@ -53,11 +66,13 @@ class GameDetailsFragment : Fragment() {
     private lateinit var genreView: TextView
     private lateinit var descriptionView: TextView
     private lateinit var userImpressionRecyclerView: RecyclerView
-    private lateinit var saveButtonView : Button
-    private lateinit var removeButtonView : Button
-    private lateinit var reviewReviewView : EditText
-    private lateinit var reviewRatingView : Slider
+    private lateinit var saveButtonView: Button
+    private lateinit var removeButtonView: Button
+    private lateinit var reviewReviewView: EditText
+    private lateinit var reviewRatingView: Slider
     private lateinit var sendReviewButton: Button
+
+    private var ReviewsAdapter = GameReviewAdapter(revs)
 
 
     override fun onCreateView(
@@ -74,7 +89,8 @@ class GameDetailsFragment : Fragment() {
         publisherView = view.findViewById(R.id.publisher_textview)
         genreView = view.findViewById(R.id.genre_textview)
         descriptionView = view.findViewById(R.id.description_textview)
-        userImpressionRecyclerView = view.findViewById(R.id.game_details_user_impression_recyclerview)
+        userImpressionRecyclerView =
+            view.findViewById(R.id.game_details_user_impression_recyclerview)
         userImpressionRecyclerView.layoutManager = LinearLayoutManager(activity)
 
 
@@ -89,8 +105,10 @@ class GameDetailsFragment : Fragment() {
         sendReviewButton = view.findViewById(R.id.sendReviewButton)
         sendReviewButton.setOnClickListener { reviewSend() }
 
+
+
         arguments?.getSerializable("game")?.let {
-            game= it as Game
+            game = it as Game
             titleView.text = game.title
             /*var id: Int = resources.getIdentifier(game.coverImage, "drawable","ba.etf.rma23.projekat")
             coverView.setImageResource(id)*/
@@ -104,12 +122,32 @@ class GameDetailsFragment : Fragment() {
             publisherView.text = game.publisher
             genreView.text = game.genre
             descriptionView.text = game.description
-            userImpressionRecyclerView.adapter = UserImpressionAdapter(game.userImpressions)
+            /*userImpressionRecyclerView.adapter = UserImpressionAdapter(game.userImpressions)
             if (game.userImpressions.isEmpty())
-                userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
+                userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT*/
+
+            //userImpressionRecyclerView.adapter = ReviewsAdapter
+            /*if (revs.isEmpty())
+                userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT*/
         }
 
-        println("GAMEID:"+game.id)
+        var result: List<GameReview> = listOf<GameReview>()
+        val scope1 = CoroutineScope(Job() + Dispatchers.Main)
+
+        //gamesList = GamesRepository.GamesList
+        scope1.launch {
+            result = GameReviewsRepository.getReviewsForGame(game.id)
+            //result = GamesRepository.getGamesByName(name)
+            //gamesList = result as List<Game>
+            revs = result
+            ReviewsAdapter.updateReviews(result)
+        }
+        userImpressionRecyclerView.layoutManager = LinearLayoutManager(activity)
+        userImpressionRecyclerView.adapter = ReviewsAdapter
+        if (revs.isEmpty())
+            userImpressionRecyclerView.layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
+
+        println("GAMEID:" + game.id)
         return view
     }
 
@@ -133,9 +171,16 @@ class GameDetailsFragment : Fragment() {
     }
 
     private fun reviewSend() {
-        val gam = GameReview(reviewRatingView.value.toInt(),reviewReviewView.text.toString(),game.id,false,"","")
+        val gam = GameReview(
+            reviewRatingView.value.toInt(),
+            reviewReviewView.text.toString(),
+            game.id,
+            false,
+            "",
+            ""
+        )
         CoroutineScope(Job() + Dispatchers.IO).launch {
-            context?.let { GameReviewsRepository.sendReview(it,gam) }
+            context?.let { GameReviewsRepository.sendReview(it, gam) }
         }
         reviewReviewView.setText("")
         reviewRatingView.value = 0F
